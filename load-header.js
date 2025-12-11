@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    fetch("header.html")
+    fetch("header.html?cache_bust=" + Date.now())
         .then(response => response.text())
         .then(html => {
             document.getElementById("header").innerHTML = html;
