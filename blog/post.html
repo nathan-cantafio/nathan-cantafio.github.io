@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Blog Post</title>
+  <link rel="stylesheet" href="../style.css" />
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    };
+  </script>
+  <script
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
+    async>
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
+  <script src="load-post.js" defer></script>
+</head>
+<body>
+  <!-- Shared site header -->
+  <div id="header"></div>
+
+  <!-- Main post content container -->
+  <main class="container">
+  	<a href="../all-posts.html" class="back-link">← Back to all posts</a>
+    <div id="post-meta"></div> <!-- Metadata: title, date, description -->
+    <article id="post-content" class="markdown-body"></article> <!-- Markdown content -->
+  </main>
+</body>
+</html>

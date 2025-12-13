@@ -1,0 +1,8 @@
+[
+    {
+        "title": "MLE is not intuitive",
+        "date": "2025-12-13",
+        "file": "mle-problem.md",
+        "description": "The justification for using MLE estimates seems fairly intuitive, but this post makes an argument for why it isn't."
+    }
+]

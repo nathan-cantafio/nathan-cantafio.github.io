@@ -1,4 +1,4 @@
-/* Basic Styles - Ultra Minimal */
+/* ===== Base Styles ===== */
 body {
     font-family: Arial, sans-serif;
     background-color: #FFFFFF;
@@ -8,39 +8,28 @@ body {
     padding: 0;
 }
 
-/* Centered content container */
+/* Centered content wrapper */
 .container {
     max-width: 1200px;
     margin: 40px auto;
     padding: 0 20px;
 }
 
-/* Header with 2-column layout */
+/* ===== Header ===== */
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 40px; /* Space between line and content below */
-    gap: 40px;
-    
-    border-bottom: 2px solid #000000; /* This adds the black line */
-    padding-bottom: 30px; /* This adds space between header content and the line */
+    border-bottom: 2px solid #000;
+    padding-bottom: 30px;
+    margin-bottom: 40px;
 }
 
-/* Left Column (Name and Links) */
 .header-content {
-    flex-grow: 1; /* Allow this to take up available space */
-    text-align: center; /* Center content horizontally */
-    margin-left: 90px; /* Adjust this value to move the image to the left and create more space for centering */
+    flex-grow: 1;
+    text-align: center;
 }
 
-/* Right Column (Image) */
-.header-image-container {
-    flex-shrink: 0;
-    margin-left: -90px; /* Move the image slightly to the left, offsetting the margin-left on header-content */
-}
-
-/* This makes the clickable H1 look like normal text */
 .home-link {
     text-decoration: none;
     color: inherit;
@@ -51,37 +40,85 @@ body {
     margin: 0 0 15px 0;
 }
 
-/* Links are now on a single horizontal line */
-.header .links a {
-    color: #000000;
-    text-decoration: none;
-    font-size: 1.1em;
-    margin-right: 15px;
+.header-image-container {
+    flex-shrink: 0;
 }
 
-.header .links a:hover {
-    text-decoration: underline;
-}
-
-/* Style for the larger image in the header */
 .header-profile-image {
     width: 180px;
     height: 180px;
     object-fit: cover;
-    border: 2px solid #000000;
+    border: 2px solid #000;
 }
 
+/* ===== Layout (Sidebar + Main) ===== */
+.page-layout {
+    display: flex;
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+    gap: 40px;
+}
 
-/* --- The rest of the styles --- */
+/* ===== Sidebar ===== */
+.sidebar {
+    width: 260px;
+    flex-shrink: 0;
+}
 
-.content p {
-    font-size: 1.1em;
-    margin: 0 0 1em 0;
+.sidebar-profile-image {
+    width: 100%;
+    border: 2px solid #000;
+    object-fit: cover;
+}
+
+.sidebar-section {
+    margin-top: 30px;
+}
+
+.sidebar-section h3 {
+    margin-bottom: 8px;
+    font-size: 1.3em;
+    border-bottom: 1px solid #000;
+}
+
+.sidebar-section a {
+    color: black;
+    text-decoration: none;
+}
+
+.sidebar-section a:hover {
+    text-decoration: underline;
+}
+
+.sidebar-nav {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-nav li {
+    margin: 6px 0;
+}
+
+.sidebar-nav a {
+    text-decoration: none;
+    color: black;
+    font-size: 1.05em;
+}
+
+.sidebar-nav a:hover {
+    text-decoration: underline;
+}
+
+/* ===== Main Content ===== */
+.main-content {
+    flex-grow: 1;
 }
 
 .page-title, .section-title {
     font-size: 2.2em;
-    border-bottom: 1px solid #000000;
+    border-bottom: 1px solid #000;
     padding-bottom: 10px;
     margin-bottom: 2rem;
 }
@@ -92,10 +129,82 @@ body {
     margin-bottom: 1.5rem;
 }
 
+/* ===== CV Styles ===== */
 .cv-section { margin-bottom: 2.5rem; }
-.cv-section h3 { font-size: 1.5em; margin-bottom: 0.75rem; padding-bottom: 5px; border-bottom: 1px solid #ccc; }
+.cv-section h3 {
+    font-size: 1.5em;
+    margin-bottom: 0.75rem;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #ccc;
+}
 .cv-entry { margin-bottom: 1.25rem; }
-.cv-entry h4 { font-size: 1.2em; margin-bottom: 0; }
-.cv-entry p { margin-top: 2px; font-style: italic; }
-.cv-entry ul { margin-top: 10px; padding-left: 20px; }
+.cv-entry h4 {
+    font-size: 1.2em;
+    margin-bottom: 0;
+}
+.cv-entry p {
+    margin-top: 2px;
+    font-style: italic;
+}
+.cv-entry ul {
+    margin-top: 10px;
+    padding-left: 20px;
+}
 
+/* ===== Blog: Recent & All Posts ===== */
+#recent-posts li a strong {
+    font-size: 0.95em;
+}
+
+#all-posts-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+}
+
+#all-posts-list li {
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+#all-posts-list a {
+    color: black;
+    text-decoration: none;
+    font-size: 1.1em;
+}
+
+#all-posts-list a:hover {
+    text-decoration: underline;
+}
+
+#all-posts-list li {
+    margin-bottom: 1.2em;
+    list-style: none;
+}
+
+#all-posts-list a {
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+.post-date {
+    font-size: 0.9em;
+    color: #666;
+}
+
+.post-description {
+    margin-top: 0.2em;
+    font-size: 0.95em;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 1rem;
+  color: var(--accent-color);
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}

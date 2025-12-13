@@ -8,19 +8,28 @@
 </head>
 <body>
 
-    <div class="container">
+    <!-- Header stays at the top -->
+    <div id="header"></div>
 
-        <!-- Header loads here -->
-        <div id="header"></div>
+    <div class="page-layout">
 
-        <main class="content">
+        <!-- Sidebar -->
+        <div id="sidebar"></div>
+
+        <!-- Main content area -->
+        <div class="main-content">
             <p>
-                I am a first year Statistics M.Sc. student at UBC. My interests include Bayesian Optimization and Gaussian Processes.
+                I am a first year Statistics M.Sc. student at UBC. My interests include Bayesian Optimization and Gaussian Processes. I also plan to occasionally write on my blog.
             </p>
-        </main>
+
+            <p>
+				Here are some of the typset notes I have written: <a href="notes.html">Notes</a>
+            </p>
+        </div>
 
     </div>
 
     <script src="load-header.js"></script>
+    <script src="load-sidebar.js"></script>
 </body>
 </html>
