@@ -10,7 +10,7 @@ Then came MLE. Given a parameterized family of distributions, we estimate the pa
 
 The problem is that, for continuous distributions, likelihood is not a probability at all. It is a product of density values evaluated at the observed data points. And unlike probabilities, densities can be made arbitrarily large. For example, in a normal model, shrinking the variance concentrates more and more mass near the mean, causing the density at that point to blow up.
 
-This raises a question. If densities can be made arbitrarily large, why doesn’t maximum likelihood estimation collapse to degenerate parameter values. Such as a variance going to zero—in order to drive the likelihood to infinity? In practice, this rarely seems to happen. MLE usually produces sensible estimates, even in continuous models.
+This raises a question. If densities can be made arbitrarily large, why doesn’t maximum likelihood estimation collapse to degenerate parameter values. Such as a variance going to zero in order to drive the likelihood to infinity? In practice, this rarely seems to happen. MLE usually produces sensible estimates, even in continuous models.
 
 So what is really going on? Why does maximizing the likelihood work so well, and under what conditions does it fail?
 
