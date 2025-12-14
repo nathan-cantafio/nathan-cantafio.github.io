@@ -25,7 +25,7 @@ function loadRecentPosts() {
       recentPosts.forEach(post => {
         const li = document.createElement("li");
         // Link to post.html with just the filename (no blog/ prefix)
-        li.innerHTML = `<a href="blog/post.html?file=${encodeURIComponent(post.file)}" target="_blank">${post.title}</a>`;
+        li.innerHTML = `<a href="blog/post.html?file=${encodeURIComponent(post.file)}">${post.title}</a>`;
         postList.appendChild(li);
       });
     })
