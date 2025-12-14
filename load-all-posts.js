@@ -25,5 +25,3 @@ fetch("blog/blogs.json")
   .catch(error => {
     document.getElementById("all-posts-list").innerHTML = `<li>Error loading posts: ${error.message}</li>`;
   });
-
-clicking on a post opens a new tab, I want it in the same tab
