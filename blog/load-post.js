@@ -1,6 +1,8 @@
 // load-post.js
 
+// -----------------------------
 // Load header (optional)
+// -----------------------------
 fetch("../header.html")
   .then((response) => response.text())
   .then((data) => {
@@ -8,6 +10,9 @@ fetch("../header.html")
   });
 
 
+// -----------------------------
+// Simple front-matter parser
+// -----------------------------
 function parseFrontMatter(mdText) {
   // Match YAML front matter at the top enclosed by ---
   const match = /^---\n([\s\S]+?)\n---/.exec(mdText);
@@ -18,26 +23,48 @@ function parseFrontMatter(mdText) {
 
   // Parse simple key: value pairs (no nested structures)
   const attributes = {};
-  yaml.split('\n').forEach(line => {
-    const [key, ...rest] = line.split(':');
+  yaml.split("\n").forEach(line => {
+    const [key, ...rest] = line.split(":");
     if (!key) return;
-    attributes[key.trim()] = rest.join(':').trim();
+    attributes[key.trim()] = rest.join(":").trim();
   });
 
   return { attributes, body };
 }
 
 
-// Function to get ?file= parameter from URL
+// -----------------------------
+// Utility: escape HTML
+// -----------------------------
+function escapeHTML(str) {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+
+// -----------------------------
+// Get ?file= from URL
+// -----------------------------
 function getMarkdownFile() {
   const params = new URLSearchParams(window.location.search);
   return params.get("file");
 }
 
+
+// -----------------------------
+// Main loader
+// -----------------------------
 async function loadPost() {
   const file = getMarkdownFile();
+
   if (!file) {
-    document.getElementById("post-content").innerHTML = "<p><em>No post specified.</em></p>";
+    document.getElementById("post-content").innerHTML =
+      "<p><em>No post specified.</em></p>";
+    document.title = "Post not found";
     return;
   }
 
@@ -47,30 +74,69 @@ async function loadPost() {
 
     const mdText = await response.text();
 
-	const parsed = parseFrontMatter(mdText);
-	const meta = parsed.attributes;
-	const content = parsed.body;
+    const parsed = parseFrontMatter(mdText);
+    const meta = parsed.attributes;
+    const content = parsed.body;
 
+    // -----------------------------
+    // Sanitize metadata
+    // -----------------------------
+    const safeTitle = meta.title ? escapeHTML(meta.title) : "Untitled";
+    const safeDate = meta.date ? escapeHTML(meta.date) : "";
+    const safeDescription = meta.description
+      ? escapeHTML(meta.description)
+      : "";
 
-    // Render metadata separately (optional)
+    // -----------------------------
+    // SEO: page title
+    // -----------------------------
+    document.title = `${safeTitle} – Nathan Cantafio`;
+
+    // -----------------------------
+    // SEO: meta description
+    // -----------------------------
+    if (safeDescription) {
+      let metaDesc = document.querySelector('meta[name="description"]');
+      if (!metaDesc) {
+        metaDesc = document.createElement("meta");
+        metaDesc.name = "description";
+        document.head.appendChild(metaDesc);
+      }
+      metaDesc.content = safeDescription;
+    }
+
+    // -----------------------------
+    // Render metadata
+    // -----------------------------
     document.getElementById("post-meta").innerHTML = `
-      <h1>${meta.title || "Untitled"}</h1>
-      <p><em>${meta.date || ""}</em></p>
-      <p>${meta.description || ""}</p>
+      <h1>${safeTitle}</h1>
+      <p><em>${safeDate}</em></p>
+      <p>${safeDescription}</p>
       <hr>
     `;
 
-    // Render markdown content (only the content, no front matter)
-    document.getElementById("post-content").innerHTML = marked.parse(content);
+    // -----------------------------
+    // Render markdown content
+    // -----------------------------
+    document.getElementById("post-content").innerHTML =
+      marked.parse(content);
+
   } catch (err) {
-    document.getElementById("post-content").innerHTML = `<p><em>Error loading post:</em> ${err.message}</p>`;
+    document.getElementById("post-content").innerHTML =
+      `<p><em>Error loading post:</em> ${escapeHTML(err.message)}</p>`;
+    document.title = "Error loading post";
   }
 
+  // -----------------------------
   // Typeset math
+  // -----------------------------
   if (window.MathJax) {
     MathJax.typesetPromise();
   }
 }
 
-// Make sure to wait for DOM ready
+
+// -----------------------------
+// DOM ready
+// -----------------------------
 document.addEventListener("DOMContentLoaded", loadPost);

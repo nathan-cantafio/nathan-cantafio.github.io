@@ -4,9 +4,9 @@ date: 2025-12-13
 description: The justification for using MLE estimates seems fairly intuitive, but this post makes an argument for why it isn't.
 ---
 
-When I was first introduced to maximum likelihood estimation (MLE), it felt like a very natural and intuitive idea. The first distributions I learned about were discrete, with probability mass functions that really did assign probabilities to events. Later, when I learned about continuous distributions, I was told to think of probability densities as a kind of proxy for probabilities. That intuition mostly worked well enough.
+When I was first introduced to maximum likelihood estimation (MLE), it felt like a very natural and intuitive idea. The first distributions I learned about were discrete, with probability mass functions that really did assign probabilities to events. Then I learned about continuous distributions, which had densities. Of course, it was emphasized that you cannot evaluate the density at a point to obtain the probability of realizing that point. But my rough intuition was to think of probability densities as a kind of proxy for probabilities. That intuition mostly worked well enough.
 
-Then came MLE. Given a parameterized family of distributions, we estimate the parameters by choosing the ones that maximize the likelihood of the observed data. If you quietly identify “likelihood” with “probability,” this feels completely reasonable: choose the parameters under which the data are most likely to occur.
+Then came MLE. Given a parameterized family of distributions, we estimate the parameters by choosing the ones that maximize the likelihood of the observed data. If you quietly identify “likelihood” with “probability,” this feels completely reasonable: choose the parameters under which the data are most likely to occur. If anything my introduction to MLE re-enforced my rough inuition about densities.
 
 The problem is that, for continuous distributions, likelihood is not a probability at all. It is a product of density values evaluated at the observed data points. And unlike probabilities, densities can be made arbitrarily large. For example, in a normal model, shrinking the variance concentrates more and more mass near the mean, causing the density at that point to blow up.
 
@@ -47,7 +47,7 @@ But in order to satisfy my doubts about MLE, I want to try and give a satisfacto
 
 > **For a 'nice' data model (one that satisfies certain regularity conditions), what is the probability that a sample of fixed sized $n$ leads to a 'degenerate' likelihood (a joint likelihood which can be made arbitrarily large for certain choices of parameters).**
 
-Formulating this a little bit more precisely. Fix $n\in\mathbb{N}$, and let $X_1,\dots,X_n\sim P_\theta^\star$ come from a family of distributions parameterized by $\theta\in\Theta$. Let $L_n(\theta)$ be the joint likelihood of the $n$ observations. Let $$A_m = \left\\{(X_1,\dots, X_n):\sup_{\theta \in\Theta} L_n(\theta)>m\right\\}$$ and let $$A=\bigcap_{m\in \mathbb{N}} A_m=\left\\{(X_1,\dots, X_n:\sup_{\theta\in\Theta}L_n(\theta)=\infty)\right\\},$$ so that $A$ is the set of samples for which the likelihood can be made arbitrarily large. What is $\mathbb{P}(A)$?
+Formulating this a little bit more precisely. Fix $n\in\mathbb{N}$, and let $X_1,\dots,X_n\sim P_{\theta^*}$ come from a family of distributions parameterized by $\theta\in\Theta$. Let $L_n(\theta)$ be the joint likelihood of the $n$ observations. Let $$A_m = \left\\{(X_1,\dots, X_n):\sup_{\theta \in\Theta} L_n(\theta)>m\right\\}$$ and let $$A=\bigcap_{m\in \mathbb{N}} A_m=\left\\{(X_1,\dots, X_n:\sup_{\theta\in\Theta}L_n(\theta)=\infty)\right\\},$$ so that $A$ is the set of samples for which the likelihood can be made arbitrarily large. What is $\mathbb{P}(A)$?
 
 #### A restricted setting
 
@@ -69,7 +69,7 @@ We often  seem to have issues when all of our observations are too close to each
     
     So while there are samples that lead to "degenerate likelihoods" they are very unlikely samples indeed.
 
-2. Let $X_1, \dots, X_n \sim \mathcal{N}(\mu^*, \sigma^{*2})$ be independent with density given by  
+2. Let $X_1, \dots, X_n \sim \mathcal{N}(\mu^*, {\sigma^*}^{2})$ be independent with density given by  
    $$f(x|\mu, \sigma^2) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp\left(-\frac{(x-\mu)^2}{2\sigma^2}\right), \quad \sigma^2 > 0.$$  
    The joint likelihood is  
    $$L_n(\mu, \sigma^2) = \prod_{i=1}^n \frac{1}{\sqrt{2\pi\sigma^2}} \exp\left(-\frac{(X_i - \mu)^2}{2\sigma^2}\right) = (2\pi\sigma^2)^{-n/2} \exp\left(-\frac{1}{2\sigma^2} \sum_{i=1}^n (X_i - \mu)^2 \right).$$  
@@ -97,7 +97,7 @@ We often  seem to have issues when all of our observations are too close to each
 
 I wonder if a more general result can be proven, for example that $\mathbb{P}(A)=0$ so long as the classic regularity conditions are satisfied.
 
-This is a subtle point that I feel gets glossed over in statistics education. Maybe in the end everything works out nicely so it doesn't really matter. But I do feel this was worthwhile thinking about.
+This point about densities not being probabilities and so why should maximizing them be a good idea is a subtle one. And I feel that it gets  glossed over in statistics education. Maybe that's because in the end everything works out nicely so it doesn't really matter. But I do feel this was worthwhile thinking about.
 
 Thanks for reading!
 
