@@ -11,7 +11,7 @@ fetch("blog/blogs.json")
       const li = document.createElement("li");
     
       li.innerHTML = `
-        <a href="blog/post.html?file=${encodeURIComponent(post.file)}">
+        <a href="blog/post.html?file=${encodeURIComponent(post.file)}" target="_blank">
           ${post.title}
         </a>
         <div class="post-date">${new Date(post.date).toLocaleDateString()}</div>
