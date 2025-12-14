@@ -11,7 +11,7 @@ fetch("blog/blogs.json")
       const li = document.createElement("li");
     
       li.innerHTML = `
-        <a href="blog/post.html?file=${encodeURIComponent(post.file)}>
+        <a href="blog/post.html?file=${encodeURIComponent(post.file)}">
           ${post.title}
         </a>
         <div class="post-date">${new Date(post.date).toLocaleDateString()}</div>
@@ -25,3 +25,5 @@ fetch("blog/blogs.json")
   .catch(error => {
     document.getElementById("all-posts-list").innerHTML = `<li>Error loading posts: ${error.message}</li>`;
   });
+
+clicking on a post opens a new tab, I want it in the same tab
