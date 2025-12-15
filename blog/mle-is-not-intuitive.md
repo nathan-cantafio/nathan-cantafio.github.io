@@ -69,8 +69,10 @@ We often  seem to have issues when all of our observations are too close to each
     
     So while there are samples that lead to "degenerate likelihoods" they are very unlikely samples indeed.
 
-2. Let $X_1, \dots, X_n \sim \mathcal{N}(\mu^*, {\sigma^*}^{2})$ be independent with density given by  
-   $$f(x|\mu, \sigma^2) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp\left(-\frac{(x-\mu)^2}{2\sigma^2}\right), \quad \sigma^2 > 0.$$  
+2. Let $X_1, \dots, X_n \sim \mathcal{N}(\mu^\*, {\sigma^\*}^2)$ be independent with density given by
+  
+   $$f(x|\mu, \sigma^2) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp\left(-\frac{(x-\mu)^2}{2\sigma^2}\right), \quad \sigma^2 > 0.$$
+     
    The joint likelihood is  
    $$L_n(\mu, \sigma^2) = \prod_{i=1}^n \frac{1}{\sqrt{2\pi\sigma^2}} \exp\left(-\frac{(X_i - \mu)^2}{2\sigma^2}\right) = (2\pi\sigma^2)^{-n/2} \exp\left(-\frac{1}{2\sigma^2} \sum_{i=1}^n (X_i - \mu)^2 \right).$$  
    The MLEs are  

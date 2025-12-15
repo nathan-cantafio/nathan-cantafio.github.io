@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.11.29)  11 DEC 2025 15:04
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.11.29)  14 DEC 2025 11:56
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -678,12 +678,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 173--176
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 215--218
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 219--222
+Underfull \hbox (badness 10000) in paragraph at lines 177--180
 
  []
 
@@ -703,13 +698,13 @@ Package logreq Info: Writing requests to 'cv.run.xml'.
 Here is how much of TeX's memory you used:
  20483 strings out of 474116
  372867 string characters out of 5743681
- 1942187 words of memory out of 5000000
+ 1943187 words of memory out of 5000000
  42637 multiletter control sequences out of 15000+600000
  562637 words of font info for 51 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  66i,9n,81p,1191b,803s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2024/texmf-dist/fonts/type1/public/fontawesome5/FontAwesome5Brands-Regular.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/fontawesome5/FontAwesome5Free-Solid.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
-Output written on /Users/nathancantafio/Projects/cantafionathan.github.io/cv/.texpadtmp/cv.pdf (1 page, 98269 bytes).
+Output written on /Users/nathancantafio/Projects/cantafionathan.github.io/cv/.texpadtmp/cv.pdf (1 page, 99825 bytes).
 PDF statistics:
  82 PDF objects out of 1000 (max. 8388607)
  57 compressed objects within 1 object stream
