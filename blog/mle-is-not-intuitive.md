@@ -8,7 +8,7 @@ When I was first introduced to maximum likelihood estimation (MLE), it felt like
 
 Then came MLE. Given a parameterized family of distributions, we estimate the parameters by choosing the ones that maximize the likelihood of the observed data. If you quietly identify “likelihood” with “probability,” this feels completely reasonable: choose the parameters under which the data are most likely to occur. If anything my introduction to MLE re-enforced my rough inuition about densities.
 
-The problem is that, for continuous distributions, likelihood is not a probability at all. It is a product of density values evaluated at the observed data points. And unlike probabilities, densities can be made arbitrarily large. For example, in a normal model, shrinking the variance concentrates more and more mass near the mean, causing the density at that point to blow up.
+The problem is that, for continuous distributions, likelihood is not a probability at all. It is a product of density values evaluated at the observed data points. And unlike probabilities, densities can be made arbitrarily large. For example, consider a normal distribution, shrinking the variance concentrates more and more mass near the mean, causing the density at that point to blow up.
 
 This raises a question. If densities can be made arbitrarily large, why doesn’t maximum likelihood estimation collapse to degenerate parameter values. Such as a variance going to zero in order to drive the likelihood to infinity? In practice, this rarely seems to happen. MLE usually produces sensible estimates, even in continuous models.
 
@@ -47,13 +47,13 @@ But in order to satisfy my doubts about MLE, I want to try and give a satisfacto
 
 > **For a 'nice' data model (one that satisfies certain regularity conditions), what is the probability that a sample of fixed sized $n$ leads to a 'degenerate' likelihood (a joint likelihood which can be made arbitrarily large for certain choices of parameters).**
 
-Formulating this a little bit more precisely. Fix $n\in\mathbb{N}$, and let $X_1,\dots,X_n\sim P_{\theta^*}$ come from a family of distributions parameterized by $\theta\in\Theta$. Let $L_n(\theta)$ be the joint likelihood of the $n$ observations. Let $$A_m = \left\\{(X_1,\dots, X_n):\sup_{\theta \in\Theta} L_n(\theta)>m\right\\}$$ and let $$A=\bigcap_{m\in \mathbb{N}} A_m=\left\\{(X_1,\dots, X_n:\sup_{\theta\in\Theta}L_n(\theta)=\infty)\right\\},$$ so that $A$ is the set of samples for which the likelihood can be made arbitrarily large. What is $\mathbb{P}(A)$?
+Formulating this a little bit more precisely. Fix $n\in\mathbb{N}$, and let $X_1,\dots,X_n\sim P_{\theta^*}$ come from a family of distributions parameterized by $\theta\in\Theta$. Let $L_n(\theta)$ be the joint likelihood of the $n$ observations. Let $$A_m = \left\\{(X_1,\dots, X_n):\sup_{\theta \in\Theta} L_n(\theta)>m\right\\}$$ and let $$A=\bigcap_{m\in \mathbb{N}} A_m=\left\\{(X_1,\dots, X_n):\sup_{\theta\in\Theta}L_n(\theta)=\infty)\right\\},$$ so that $A$ is the set of samples for which the likelihood can be made arbitrarily large. What is $\mathbb{P}(A)$?
 
 #### A restricted setting
 
 If we assume that the distribution $P_\theta$ has a density $f(x|\theta)$ which is continuous and uniformly bounded in the sense that there is a constant $M$ (not depending on $x$ or $\theta$) such that $f(x|\theta)<M$ for all $x,\theta$, then for any finite independent sample of realizations $x_1,\dots, x_n$ and $\theta\in \Theta$ we have  $$L_n(\theta)=\prod_{i=1}^n f(x_i|\theta)\leq\prod_{i=1}^n M=M^n<\infty.$$ So $\mathbb{P}(A)=0$.
 
-This is quite a strong assumption. For example we already saw that a Gaussians do not satisfy this property. If $n=1$ (or if $n>1$ and all observations are the same though this has probability $0$) then setting the mean to $x_1$ and letting the variance tend to $0$ allows the likelihood to be arbitrarily large. However we can fix the situation by enforcing $\sigma^2>\varepsilon^2$ for some $\varepsilon>0$. In this case we can take $M = \frac{1}{\sqrt{2\pi \varepsilon^2}}$.
+This is quite a strong assumption. For example we already saw that Gaussians do not satisfy this property. If $n=1$ (or if $n>1$ and all observations are the same though this has probability $0$) then setting the mean to $x_1$ and letting the variance tend to $0$ allows the likelihood to be arbitrarily large. However we can fix the situation by enforcing $\sigma^2>\varepsilon^2$ for some $\varepsilon>0$. In this case we can take $M = \frac{1}{\sqrt{2\pi \varepsilon^2}}$.
 
 #### Examples in a more general setting
 
@@ -99,7 +99,7 @@ We often  seem to have issues when all of our observations are too close to each
 
 I wonder if a more general result can be proven, for example that $\mathbb{P}(A)=0$ so long as the classic regularity conditions are satisfied.
 
-This point about densities not being probabilities and so why should maximizing them be a good idea is a subtle one. And I feel that it gets  glossed over in statistics education. Maybe that's because in the end everything works out nicely so it doesn't really matter. But I do feel this was worthwhile thinking about.
+This point, about whether estimating parameters by maximizing likelihoods is reasonable or not, is a subtle one. And I feel that it gets  glossed over in statistics education. Maybe that's because in the end everything works out nicely so it doesn't really matter. But I do feel this was worthwhile thinking about.
 
 Thanks for reading!
 

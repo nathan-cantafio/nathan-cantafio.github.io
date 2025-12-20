@@ -4,5 +4,11 @@
         "date": "2025-12-13",
         "file": "mle-is-not-intuitive.md",
         "description": "The justification for using MLE estimates seems fairly intuitive, but this post makes an argument for why it isn't."
+    },
+    {
+        "title": "Pokémon Team Building as an Optimization Problem",
+        "date": "2025-12-20",
+        "file": "pokemon-team-opt.md",
+        "description": "I treated competitive pokemon team building as a black box combinatorial optimization problem. This post details the process and shares a few results."
     }
 ]
