@@ -14,7 +14,7 @@ fetch("blog/blogs.json")
         <a href="blog/post.html?file=${encodeURIComponent(post.file)}">
           ${post.title}
         </a>
-        <div class="post-date">${new Date(post.date).toLocaleDateString()}</div>
+        <div class="post-date">${new Date(post.date + "T00:00:00").toLocaleDateString()}</div>
         <div class="post-description">${post.description}</div>
       `;
     
