@@ -8,13 +8,15 @@ description: A population-based optimization framework for Pokémon team buildin
 
 The reason I initially started this was because I needed a project idea for the statistical computation course I was taking. It was important to me that I pick a topic which had the right balance of feasibility and scope. I also wanted it to be novel in some sense.
 
-With this in the back of my mind, I came accross a YouTube video titled something like "Pokémon as a Machine Learning Problem" (which seems to have since been taken down). It essentially made the case that competitive Pokémon is an under-explored domain for machine learning methods. There are two main aspects to competitive Pokémon, team building and the battles themselves, both of which are interesting machine learning problems. Team building requires a way of evaluating teams in an enormous search space (something on the order of $10^\{200\}$), and selecting the best possible team. Measuring "best" is also imperfect; it probably depends on the potential opponents (or as players call it, the metagame) and the most obvious way to me is just to run as many battles as you can to calculate a win-rate. But to complicate things further, battles are stochastic, there is some noise. So to recap: team building is an example of a noisy black-box objective function. My immediate thought was Bayesian Optimization (BO). Although after working on the problem BO is tough because the search space is combinatorial. Nonetheless I was inspired to start my project. 
+With this in the back of my mind, I came accross a YouTube video titled something like "Pokémon as a Machine Learning Problem" (which seems to have since been taken down). It essentially made the case that competitive Pokémon is an under-explored domain for machine learning methods. There are two main aspects to competitive Pokémon, team building and the battles themselves, both of which are interesting machine learning problems. Team building requires a way of evaluating teams in an enormous search space (something on the order of $10^\{200\}$), and selecting the best possible team. Measuring "best" is also imperfect; it probably depends on the potential opponents (or as players call it, the metagame) and the most obvious way to me is just to run as many battles as possible and calculate a win-rate. But to complicate things further, battles are stochastic, there is some noise. 
+
+So to recap: team building is an example of a *noisy black-box objective function*. A noisy black-box objective function?! My immediate thought was to use Bayesian Optimization (BO). Although after working on the problem BO is tought to make work  because the search space is combinatorial. Nonetheless my interest in Pokémon and background in BO got me inspired to start the project.
 
 ### How to simulate Pokémon battles?
 
 This was the first question I had to answer. The most common way to do so (if using Python) as far as I can tell is through the `poke-env` interface which connects to a Pokémon Showdown server. A big disadvantage of this is that it requires all the overhead of a Showdown server (the chat room, battle animations, player "accounts", etc.) and not just a battle engine which takes in two teams, simulates the battle, and returns who won. 
 
-Because of this and some other dissatisfactions I had with `poke-env`, I actually tried writing my own battle engine. After getting started on this for a few days, I decided that there are so many things that I would need to get right, and it would be so hard to tell if my engine was "cartridge accurate" that I would be better seeing if such an engine already existed. And it did! Unfortunately, it was coded in Zig, and I could not for the life of me get it to build. So I decided to cut my losses and go back to use `poke-env`. But I wanted to make the project as extensible as possible. Not tied to a particular engine. So that  if I ever got another engine working, it would be easy to plug it into the code and build some teams.
+Because of this and some other dissatisfactions I had with `poke-env`, I actually tried writing my own battle engine. After getting started on this for a few days, I decided that there are so many things that I would need to get right, and it would be so hard to tell if my engine was "cartridge accurate" that I would be better off seeing if such an engine already existed. And it did! Unfortunately, it was coded in Zig, and I could not for the life of me get it to build. So I decided to cut my losses and go back to use `poke-env`. But I wanted to make the project as extensible as possible. Not tied to a particular engine. So that  if I ever got another engine working, it would be easy to plug it into the code and build some teams.
 
 ### Problem formulation
 
@@ -60,7 +62,7 @@ Putting this together, the total number of distinct teams is roughly
 
 $$\binom{151}{6}\cdot\binom{30}{4}^6=\left(1.488\cdot 10^9\right)\cdot\left(2.7\cdot 10^4\right)^6\approx 5.4\cdot 10^\{35\}.$$
 
-This esimate is rough, but the conclusion is legitimate. The search space is astronomically large. Even if we could evaluate one million teams per second, and we hade been doing so since the dawn of the universe, we still wouldn't have exhausted the search space!
+This esimate is rough, but the conclusion is legitimate. The search space is astronomically large. Even if we had computers that could evaluate one team per second, and we had as many computers as there are galaxies in the unviverse, and we had been running these computers since the dawn of time, we still wouldn't have exhausted the search space!
 
 ### Optimization Methods
 
@@ -132,7 +134,7 @@ Finally, this project made it very clear that agent quality is a bottleneck. Eve
 
 There are several natural extensions to this project.
 
-The most obvious step is to replace the battle agent. Using a stronger heuristic agent, or even a learned policy, would likely push the found teams more towards optimal under optimal play. A vague, but interesting idea is co-evolution: jointly optimizing teams and agents. This would be highly challenging but cool to see.
+The most obvious step is to replace the battle agent. Using a stronger heuristic agent, or even a learned policy, would likely push the found teams more towards "optimal under optimal play". A vague, but interesting idea is co-evolution: jointly optimizing teams and agents. This would be highly challenging but cool to see.
 
 Another obvious next step is to implement more algorithms beyond just RS and GA. Or change the `evaluate_teams` routine to use an opponent gauntlet rather than ELO. 
 

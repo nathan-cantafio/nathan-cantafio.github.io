@@ -9,6 +9,6 @@
         "title": "Pokémon Team Building as an Optimization Problem",
         "date": "2025-12-20",
         "file": "pokemon-team-opt.md",
-        "description": "I treated competitive pokemon team building as a black box combinatorial optimization problem. This post details the process and shares a few results."
+        "description": "A population-based optimization framework for Pokémon team building, using simulated battles to evaluate noisy black-box objectives over large combinatorial spaces."
     }
 ]
