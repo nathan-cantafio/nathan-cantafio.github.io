@@ -79,7 +79,7 @@ This abstraction makes it easy to swap out optimization strategies while keeping
 
 In Random Search (RS), each iteration maintains a small set of top-performing teams from the previous generation and fills the remainder of the population with teams sampled uniformly at random from the legal search space. The `evaluate_teams` routine assigns scores using an ELO rating system computed from battles within the population. ELO provides a relative measure of team strength: wins against strong teams increase a team’s rating more than wins against weaker teams, and losses against strong teams are penalized less than losses against weak teams.
 
-The `produce_next_generation` routine then discards most of the population, retaining only the highest-rated teams and replacing the rest with newly sampled random teams. This can be viewed as an elitist variant of random search. A fully memoryless version—where the entire population is resampled each generation—would also be reasonable.
+The `produce_next_generation` routine then discards most of the population, retaining only the highest-rated teams and replacing the rest with newly sampled random teams. This can be viewed as an elitist variant of random search. A fully memoryless version, where the entire population is resampled each generation, would also be reasonable.
 
 
 #### Genetic Algorithms
