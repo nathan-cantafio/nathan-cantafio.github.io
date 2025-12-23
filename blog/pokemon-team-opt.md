@@ -121,7 +121,9 @@ To give a concrete example of the agent’s limitations, I observed a battle in 
 Here we see the plot of ELO score against generation for both methods.
 
 <p align="center">
-	<img src="/blog/assets/pokemon-team-opt/aggregate_performance.png" alt ="Aggregate ELO vs generation">
+	<img src="/blog/assets/pokemon-team-opt/aggregate_performance.png" 
+	alt ="Aggregate ELO vs generation"
+	style="max-width: 75%; height: auto;">
 </p>
 
 Here is a plot of win-rate against a strong pre-defined gauntlet of opponent teams (there are 30 human-made OU teams in the gauntlet). We see that with just 10 generations neither method does particularly well, but the genetic algorithm does have a slight edge. In contrast the best Random Search teams had higher ELO than the best Genetic Algorithm team. This is an example of why ELO cannot be compared between populations. The bad teams found by random search are really bad and end up being "free ELO" for the strong (really mediocre) teams (this is called ELO-inflation in some communities).
@@ -137,9 +139,9 @@ Here I have made GIFs of how the team evolved over time. These GIFs show the tea
        alt="Team evolution (Genetic Algorithm)"
        style="max-width: 45%; height: auto;">
 
-  <img src="/blog/assets/pokemon-team-opt/team_evolution_RandomSearch.gif"
+  <img src="/blog/assets/pokemon-team-opt/team_evolution_EloRandomSearch.gif"
        alt="Team evolution (Random Search)"
-       style="max-width: 45%; height: auto;">
+       style="max-width: 60%; height: auto;">
 </div>
 
 After just 10 generations, neither method produces teams that reliably beat the gauntlet, but the genetic algorithm shows slightly more consistent progress, while random search benefits from ELO inflation rather than genuinely stronger teams.
