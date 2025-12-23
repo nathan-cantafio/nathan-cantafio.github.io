@@ -137,11 +137,11 @@ Here I have made GIFs of how the team evolved over time. These GIFs show the tea
 <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
   <img src="/blog/assets/pokemon-team-opt/team_evolution_EloGeneticAlgorithm.gif"
        alt="Team evolution (Genetic Algorithm)"
-       style="max-width: 60%; height: auto;">
+       style="max-width: 50%; height: auto;">
 
   <img src="/blog/assets/pokemon-team-opt/team_evolution_EloRandomSearch.gif"
        alt="Team evolution (Random Search)"
-       style="max-width: 60%; height: auto;">
+       style="max-width: 50%; height: auto;">
 </div>
 
 After just 10 generations, neither method produces teams that reliably beat the gauntlet, but the genetic algorithm shows slightly more consistent progress, while random search benefits from ELO inflation rather than genuinely stronger teams.
