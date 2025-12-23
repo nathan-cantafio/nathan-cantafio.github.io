@@ -118,7 +118,7 @@ To give a concrete example of the agent’s limitations, I observed a battle in 
 
 ### Results
 
-Here we see the plot of ELO score against generation for both methods.
+I ran a minimal test with just 10 generations. In reality I would like to run 100 or even 1000 generations with these methods. Below we see the plot of ELO score against generation for both methods.
 
 <p align="center">
 	<img src="/blog/assets/pokemon-team-opt/aggregate_performance.png" 
@@ -126,22 +126,22 @@ Here we see the plot of ELO score against generation for both methods.
 	style="max-width: 75%; height: auto;">
 </p>
 
-Here is a plot of win-rate against a strong pre-defined gauntlet of opponent teams (there are 30 human-made OU teams in the gauntlet). We see that with just 10 generations neither method does particularly well, but the genetic algorithm does have a slight edge. In contrast the best Random Search teams had higher ELO than the best Genetic Algorithm team. This is an example of why ELO cannot be compared between populations. The bad teams found by random search are really bad and end up being "free ELO" for the strong (really mediocre) teams (this is called ELO-inflation in some communities).
+Below is a plot of win-rate against a strong pre-defined gauntlet of opponent teams (there are 30 human-made OU teams in the gauntlet). We see that with just 10 generations neither method does particularly well, but the genetic algorithm does have a slight edge. Though notice in the above plot that the best Random Search teams had higher ELO than the best Genetic Algorithm teams. This is an example of why ELO cannot be compared between populations. The bad teams found by random search are really bad and end up being "free ELO" for the strong (truthfully mediocre) teams (this is called ELO-inflation in some communities).
 
 <p align="center">
 	<img src="/blog/assets/pokemon-team-opt/aggregate_evaluation.png" alt ="Mean win rate vs gauntlet">
 </p>
 
-Here I have made GIFs of how the team evolved over time. These GIFs show the team which has highest ELO for that generation at each generation. I hummed and hawed about whether showing the team with highest yet seen ELO at each generation (in other words the highest cumulative ELO) would be better, but decided against it. ELO is a measure of relative performance. I think that if the population under which ELO is measured is always changing (which it is here), then a cumulative examination of it is somewhat meaningless (nevertheless there are cumulate plots of ELO above...)
+Here I have made GIFs of how the teams evolved over time. These GIFs show the team which has highest ELO for that generation at each generation. I hummed and hawed about whether showing the team with highest yet seen ELO at each generation (in other words the highest cumulative ELO) would be better, but decided against it. ELO is a measure of relative performance. I think that if the population under which ELO is measured is always changing (which it is here), then a cumulative examination of it is somewhat meaningless (nevertheless there are cumulate plots of ELO above...)
 
 <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
   <img src="/blog/assets/pokemon-team-opt/team_evolution_EloGeneticAlgorithm.gif"
        alt="Team evolution (Genetic Algorithm)"
-       style="max-width: 50%; height: auto;">
+       style="max-width: 45%; height: auto;">
 
   <img src="/blog/assets/pokemon-team-opt/team_evolution_EloRandomSearch.gif"
        alt="Team evolution (Random Search)"
-       style="max-width: 50%; height: auto;">
+       style="max-width: 45%; height: auto;">
 </div>
 
 After just 10 generations, neither method produces teams that reliably beat the gauntlet, but the genetic algorithm shows slightly more consistent progress, while random search benefits from ELO inflation rather than genuinely stronger teams.
