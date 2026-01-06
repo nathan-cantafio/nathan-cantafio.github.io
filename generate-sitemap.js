@@ -4,7 +4,7 @@ const fs = require("fs");
 const path = require("path");
 
 // -------- CONFIG --------
-const SITE_URL = "https://cantafionathan.github.io";
+const SITE_URL = "https://nathancantafion.com";
 const BLOGS_JSON = path.join(__dirname, "blog", "blogs.json");
 const OUTPUT = path.join(__dirname, "sitemap.xml");
 // ------------------------

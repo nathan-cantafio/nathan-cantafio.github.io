@@ -32,6 +32,23 @@ function parseFrontMatter(mdText) {
   return { attributes, body };
 }
 
+// -----------------------------
+// SEO: set canonical URL
+// -----------------------------
+function setCanonical(file) {
+  const base = "https://nathancantafio.com/blog/post.html";
+  const canonicalUrl = `${base}?file=${encodeURIComponent(file)}`;
+
+  // Remove any existing canonical
+  const existing = document.querySelector('link[rel="canonical"]');
+  if (existing) existing.remove();
+
+  const link = document.createElement("link");
+  link.rel = "canonical";
+  link.href = canonicalUrl;
+  document.head.appendChild(link);
+}
+
 
 // -----------------------------
 // Utility: escape HTML
@@ -60,6 +77,10 @@ function getMarkdownFile() {
 // -----------------------------
 async function loadPost() {
   const file = getMarkdownFile();
+
+  if (file) {
+    setCanonical(file);
+  }
 
   if (!file) {
     document.getElementById("post-content").innerHTML =
