@@ -195,7 +195,7 @@ a:hover {
   flex: 1;
   padding: 40px 48px;
   background: var(--cream-main);
-  max-width: 720px;
+  max-width: 880px;
 }
 
 .name-title {
@@ -214,6 +214,7 @@ a:hover {
   line-height: 1.85;
   color: var(--brown-dark);
   margin-bottom: 1em;
+  max-width: 780px;
 }
 
 .main-content em {

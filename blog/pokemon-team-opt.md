@@ -120,14 +120,14 @@ I ran a minimal test with just 10 generations. In reality I would like to run 10
 
 <p align="center">
 	<img src="/blog/assets/pokemon-team-opt/aggregate_performance.png" 
-	alt ="Aggregate ELO vs generation"
-	style="max-width: 75%; height: auto;">
+	alt ="Aggregate ELO vs generation">
 </p>
 
 Below is a plot of win-rate against a strong pre-defined gauntlet of opponent teams (there are 30 human-made OU teams in the gauntlet). We see that with just 10 generations neither method does particularly well, but the genetic algorithm does have a slight edge. Though notice in the above plot that the best Random Search teams had higher ELO than the best Genetic Algorithm teams. This is an example of why ELO cannot be compared between populations. The bad teams found by random search are really bad and end up being "free ELO" for the strong (truthfully mediocre) teams (this is called ELO-inflation in some circles).
 
 <p align="center">
-	<img src="/blog/assets/pokemon-team-opt/aggregate_evaluation.png" alt ="Mean win rate vs gauntlet">
+	<img src="/blog/assets/pokemon-team-opt/aggregate_evaluation.png" 
+	alt ="Mean win rate vs gauntlet">
 </p>
 
 Here I have made GIFs of how the teams evolved over time. These GIFs show the team which has highest ELO for that generation at each generation. I hummed and hawed about whether showing the team with highest yet seen ELO at each generation (in other words the highest cumulative ELO) would be better, but decided against it. ELO is a measure of relative performance. I think that if the population under which ELO is measured is always changing (which it is here), then a cumulative examination of it is somewhat meaningless (nevertheless there are cumulate plots of ELO above...)
@@ -141,17 +141,13 @@ Here I have made GIFs of how the teams evolved over time. These GIFs show the te
   <div style="flex: 0 0 45%; text-align: center;">
     <img
       src="/blog/assets/pokemon-team-opt/team_evolution_EloGeneticAlgorithm.gif"
-      alt="Team evolution (Genetic Algorithm)"
-      style="width: 100%; height: auto;"
-    >
+      alt="Team evolution (Genetic Algorithm)">
   </div>
 
   <div style="flex: 0 0 45%; text-align: center;">
     <img
       src="/blog/assets/pokemon-team-opt/team_evolution_EloRandomSearch.gif"
-      alt="Team evolution (Random Search)"
-      style="width: 100%; height: auto;"
-    >
+      alt="Team evolution (Random Search)">
   </div>
 </div>
 
