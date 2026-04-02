@@ -1,35 +1,34 @@
-// load-sidebar.js
-fetch("sidebar.html")
-  .then(response => response.text())
-  .then(html => {
-    document.getElementById("sidebar").innerHTML = html;
-    loadRecentPosts();
-  })
-  .catch(err => console.error("Error loading sidebar:", err));
+document.addEventListener("DOMContentLoaded", () => {
+    fetch("/sidebar.html?v=" + Date.now())
+        .then(res => res.text())
+        .then(html => {
+            document.getElementById("sidebar").innerHTML = html;
+            return fetch("/blog/blogs.json");
+        })
+        .then(res => res.json())
+        .then(posts => {
+            posts.sort((a, b) => new Date(b.date) - new Date(a.date));
+            const recent = posts.slice(0, 3);
 
-function loadRecentPosts() {
-  const postList = document.getElementById("recent-posts");
+            // Sidebar recent posts
+            const sidebarList = document.getElementById("recent-posts");
+            if (sidebarList) {
+                sidebarList.innerHTML = recent.map(p =>
+                    `<li><a href="/blog/post.html?file=${encodeURIComponent(p.file)}">${p.title}</a></li>`
+                ).join("");
+            }
 
-  fetch("blog/blogs.json")
-    .then(res => res.json())
-    .then(posts => {
-      // Sort posts by date descending (newest first)
-      posts.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-      // Take top 3
-      const recentPosts = posts.slice(0, 3);
-
-      // Clear list just in case
-      postList.innerHTML = "";
-
-      recentPosts.forEach(post => {
-        const li = document.createElement("li");
-        // Link to post.html with just the filename (no blog/ prefix)
-        li.innerHTML = `<a href="blog/post.html?file=${encodeURIComponent(post.file)}">${post.title}</a>`;
-        postList.appendChild(li);
-      });
-    })
-    .catch(error => {
-      postList.innerHTML = `<li>Error loading posts: ${error.message}</li>`;
-    });
-}
+            // Homepage recent writing section
+            const mainList = document.getElementById("recent-posts-main");
+            if (mainList) {
+                mainList.innerHTML = recent.map(p => {
+                    const date = new Date(p.date + "T00:00:00").toLocaleDateString("en-US", { month: "short", year: "numeric" });
+                    return `<li>
+                        <a href="/blog/post.html?file=${encodeURIComponent(p.file)}">${p.title}</a>
+                        <span class="post-date">${date}</span>
+                    </li>`;
+                }).join("");
+            }
+        })
+        .catch(err => console.error("Failed to load sidebar:", err));
+});

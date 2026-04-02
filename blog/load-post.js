@@ -1,16 +1,6 @@
 // load-post.js
 
 // -----------------------------
-// Load header (optional)
-// -----------------------------
-fetch("../header.html")
-  .then((response) => response.text())
-  .then((data) => {
-    document.getElementById("header").innerHTML = data;
-  });
-
-
-// -----------------------------
 // Simple front-matter parser
 // -----------------------------
 function parseFrontMatter(mdText) {
@@ -130,7 +120,7 @@ async function loadPost() {
     // Render metadata
     // -----------------------------
     document.getElementById("post-meta").innerHTML = `
-      <h1>${safeTitle}</h1>
+      <h2>${safeTitle}</h2>
       <p><em>${safeDate}</em></p>
       <p>${safeDescription}</p>
       <hr>

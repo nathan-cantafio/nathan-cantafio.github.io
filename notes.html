@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Notes — Nathan Cantafio</title>
-	<meta name="description" content="Lecture notes and study materials on mathematics, statistics, and probability.">
-    <link rel="stylesheet" href="style.css">
+    <title>Notes — Nathan Cantafio</title>
+    <meta name="description" content="Lecture notes and study materials on mathematics, statistics, and probability.">
+    <link rel="stylesheet" href="/style.css">
 
     <!-- Favicon -->
    <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
@@ -17,52 +17,46 @@
 </head>
 <body>
 
-    <div class="container">
+    <div id="header"></div>
 
-        <!-- Shared Header -->
-        <a href="/index.html" class="back-link">← Back to home page</a>
+    <div class="page-layout">
 
-        <h2 class="page-title">Notes</h2>
+        <div id="sidebar"></div>
 
-        <p>
-           	A collection of typeset notes, exercises, and course materials.
-        </p>
+        <div class="main-content">
 
-        <!-- Notes Section -->
-		<section class="notes-section">
-        
-            <div class="notes-entry"> 
-            	<h3>MATH 507 — Measure Theory & Integration</h3> 
-            	<p> 
-            		PDF: <a href="notes/math507.pdf" target="_blank">Here</a><br> 
-            	</p> 
-         	</div>
+            <h1 class="page-title">Notes</h1>
 
-			<div class="notes-entry"> 
-            	<h3>MATH 510 — Functional Analysis</h3> 
-            	<p> 
-            		PDF: <a href="notes/math510.pdf" target="_blank">Here</a><br> 
-            	</p> 
-         	</div>     
+            <p>A collection of typeset notes, exercises, and course materials.</p>
 
-			<div class="notes-entry"> 
-            	<h3>Probability Theory</h3> 
-            	<p> 
-            		PDF: <a href="notes/stochproc.pdf" target="_blank">Here</a><br> 
-            	</p> 
-         	</div>
+            <ul id="all-posts-list">
+                <li>
+                    <a href="/notes/math507.pdf" target="_blank">MATH 507 — Measure Theory &amp; Integration</a>
+                    <span class="post-date">PDF</span>
+                    <div class="post-description">Note transcribed from UBC's MATH 507 (Winter Term 1, 2025/26). Covers σ-algebras, measures and outer measures, Borel measures, the Lebesgue integral, convergence theorems, product measures and the Fubini-Tonelli theorems, signed measures, the Radon-Nikodym theorem, and differentiation.</div>
+                </li>
+                <li>
+                    <a href="/notes/math510.pdf" target="_blank">MATH 510 — Functional Analysis</a>
+                    <span class="post-date">PDF</span>
+                    <div class="post-description">Notes transcribed from UBC's MATH 510 (Winter Term 2, 2025/26). Covers Banach spaces, bounded linear maps and functionals, the Baire category theorem and its consequences, Lp and Hilbert spaces, weak and weak* topologies, the Fourier transform and Schwartz class, Fourier series, and further topics including interpolation theory and distribution theory.</div>
+                </li>
+                <li>
+                    <a href="/notes/stochproc.pdf" target="_blank">Probability Theory</a>
+                    <span class="post-date">PDF</span>
+                    <div class="post-description">Notes drawn from UBC's STAT 547C (Winter Term 1, 2025/26) and the stochastic processes reading group (Summer 2026). Covers measure-theoretic foundations of probability, probability kernels, conditioning and independence, concentration inequalities, integral probability metrics, φ-divergences, and martingales. Still being expanded.</div>
+                </li>
+                <li>
+                    <a href="/notes/FollandExercises.pdf" target="_blank">Folland Exercises</a>
+                    <span class="post-date">PDF</span>
+                    <div class="post-description">Selected solutions to exercises from Folland's Real Analysis: Modern Techniques and Their Applications.</div>
+                </li>
+            </ul>
 
-			<div class="notes-entry"> 
-            	<h3>Folland Exercises</h3> 
-            	<p> 
-            		PDF: <a href="notes/FollandExercises.pdf" target="_blank">Here</a><br> 
-            	</p> 
-         	</div>    	
-        
-        </section>
+        </div>
 
     </div>
 
-    <script src="load-header.js"></script>
+    <script src="/load-header.js" defer></script>
+    <script src="/load-sidebar.js" defer></script>
 </body>
 </html>

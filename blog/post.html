@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Blog Post</title>
-  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="/style.css" />
   <script>
     window.MathJax = {
       tex: {
@@ -17,30 +17,35 @@
       }
     };
   </script>
-  <script
-    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
-    async>
-  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
   <script src="load-post.js" defer></script>
 
   <!-- Favicon -->
-   <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
-   <link rel="icon" type="image/svg+xml" href="/favicon/favicon.svg" />
-   <link rel="shortcut icon" href="/favicon/favicon.ico" />
-   <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
-   <meta name="apple-mobile-web-app-title" content="Nathan Cantafio" />
-   <link rel="manifest" href="/favicon/site.webmanifest" />
+  <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
+  <link rel="icon" type="image/svg+xml" href="/favicon/favicon.svg" />
+  <link rel="shortcut icon" href="/favicon/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-title" content="Nathan Cantafio" />
+  <link rel="manifest" href="/favicon/site.webmanifest" />
 </head>
 <body>
-  <!-- Shared site header -->
+
   <div id="header"></div>
 
-  <!-- Main post content container -->
-  <main class="container">
-  	<a href="../all-posts.html" class="back-link">← Back to all posts</a>
-    <div id="post-meta"></div> <!-- Metadata: title, date, description -->
-    <article id="post-content" class="markdown-body"></article> <!-- Markdown content -->
-  </main>
+  <div class="page-layout">
+
+    <div id="sidebar"></div>
+
+    <div class="main-content">
+      <a href="/all-posts.html" class="back-link">← Back to all posts</a>
+      <div id="post-meta"></div>
+      <article id="post-content"></article>
+    </div>
+
+  </div>
+
+  <script src="/load-header.js" defer></script>
+  <script src="/load-sidebar.js" defer></script>
 </body>
 </html>
