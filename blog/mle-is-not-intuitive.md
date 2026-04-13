@@ -6,7 +6,7 @@ description: The justification for using MLE estimates seems fairly intuitive, b
 
 When I was first introduced to maximum likelihood estimation (MLE), it felt like a very natural and intuitive idea.
 
-Here is the setup. You have data, say $n$ observed values $x_1, \dots, x_n$. You believe these came from some family of distributions, parameterized by some unknown $\theta$. For example, you might believe your data came from a normal distribution, and $\theta = (\mu, \sigma^2)$ are the unknown mean and variance. The goal is to estimate $\theta$ from the data.
+Here is the setup. You have independent data, say $n$ observed values $x_1, \dots, x_n$. You believe these came from some family of distributions, parameterized by some unknown $\theta$. For example, you might believe your data came from a normal distribution, and $\theta = (\mu, \sigma^2)$ are the unknown mean and variance. The goal is to estimate $\theta$ from the data.
 
 MLE says: choose the $\hat\theta$ that makes the observed data most "likely." More precisely, if the distribution has density $f(x|\theta)$, define the **likelihood function**
 
