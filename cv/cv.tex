@@ -103,7 +103,7 @@
 \newcommand{\jobheader}[3]{
     \begin{tabularx}{\linewidth}{@{}l X r@{}}
         \textbf{#1} & \hfill & #2 \\
-        \textit{#3} & \hfill & \\
+        \multicolumn{3}{@{}l@{}}{\small\textit{\hspace{1em}#3}} \\
     \end{tabularx}
 }
 
@@ -154,6 +154,8 @@
 
 \begin{tabularx}{\linewidth}{@{}l X r@{}}
 \textbf{M.Sc. Statistics} & UBC & 2025--present \\
+\multicolumn{3}{@{}l@{}}{\small\textit{\hspace{1em} First Generation Student Mentor}} \\
+\multicolumn{3}{@{}l@{}}{\small\textit{\hspace{1em} Junior Statistical Consultant, ASDA}} \\
 \textbf{B.Sc. Combined Honours, Mathematics and Statistics} 
 & UBC & 2020--2025 \\
 \end{tabularx}
@@ -164,7 +166,6 @@
 \section{Skills}
 \begin{tabularx}{\linewidth}{@{}l X@{}}
 \textbf{Programming} &  Python (PyTorch, GPyTorch, NumPy), R (Tidyverse, ggplot2)\\
-\textbf{Stats \& ML} & Optimization, Regression, Stochastic Simulation \\
 \textbf{Tools \& Software} & \LaTeX, Git, GitHub, Linux/Unix Shell (HPC), Weights and Biases, Microsoft Office Suite \\
 \end{tabularx}
 
@@ -180,34 +181,31 @@
 %Experience
 \section{Work Experience}
 
-\jobheader{Statistics First Generation Student Mentor}{Dec 2025 - Apr 2026}{University of British Columbia}
+\jobheader{Teaching Assistant -- STAT 305, STAT 302}{Sep 2025 - Jun 2026}{University of British Columbia}
 \begin{jobitems}
-\item Providing one-on-one mentorship to first-generation statistics students
-\end{jobitems}
-
-
-\jobheader{Teaching Assistant, STAT 305}{Sep 2025 - Apr 2026}{University of British Columbia}
-\begin{jobitems}
-\item Facilitating weekly lab sections and tutorials
-\item Collaborating with faculty to develop and grade examination materials
+\item Held office hours, led weekly labs, and contributed to exam development across two undergraduate courses
+%\item Facilitating weekly lab sections and tutorials
+%\item Collaborating with faculty to develop and grade examination materials
 \end{jobitems}
 
 
 \jobheader{Undergraduate Summer Research Assistantship}{May 2025 - Aug 2025}
 {University of British Columbia, under Prof. Geoff Pleiss}
 \begin{jobitems}
-\item Performed mathematical analyses of Gaussian processes and Bayesian Optimization in the batch setting	
-\item Implemented batch Bayesian Optimization algorithms using Python (GPyTorch and BoTorch)
-\item Conducted large-scale computer experiments using Slurm on Compute Canada HPC clusters
+\item Studied Gaussian processes and Bayesian Optimization using Python on Compute Canada HPC clusters
+%\item Performed mathematical analyses of Gaussian processes and Bayesian Optimization in the batch setting	
+%\item Implemented batch Bayesian Optimization algorithms using Python (GPyTorch and BoTorch)
+%\item Conducted large-scale computer experiments using Slurm on Compute Canada HPC clusters
 \end{jobitems}
 
 
 \jobheader{External Support Specialist Co-op}{Sep 2023 - Aug 2024}{Chartered Professional Accountants of British Columbia}
 \begin{jobitems}
-\item Provided technical support to both internal and external stakeholders
-\item Authored an internal SharePoint wiki for best troubleshooting practices
+\item Provided technical support to internal and external stakeholders and authored an internal troubleshooting wiki
+%\item Provided technical support to both internal and external stakeholders
+%\item Authored an internal SharePoint wiki for best troubleshooting practices
 \end{jobitems}
-
+\vspace{-\baselineskip}
 
 %\jobheader{Quick Service Attendant}{Sep 2021 - Aug 2022}{Canucks Sports and Entertainment}
 
@@ -222,7 +220,7 @@
 
 \jobheader{Pandemic Simulation Experiment}{\href{https://github.com/nathan-cantafio/pandemic-simulation}{Link to Repo}}{STAT 404 Class Project}
 \begin{jobitems}
-\item A designed simulation experiment to assess which policies are most effective at preventing disease spread	
+\item Designed a simulation experiment to assess which policies are most effective at preventing disease spread	
 \end{jobitems}
 
 \jobheader{Mortgage vs. Rent Simulation}{\href{https://github.com/nathan-cantafio/mortgages}{Link to Repo}}{Personal Project}

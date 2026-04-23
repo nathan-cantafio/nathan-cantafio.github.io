@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.11.29)  26 FEB 2026 12:55
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.11.29)  23 APR 2026 16:51
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -663,37 +663,27 @@ Package hyperref Info: Link coloring ON on input line 125.
 \openout4 = `cv.out'.
 
  (/usr/local/texlive/2024/texmf-dist/tex/latex/fontawesome5/ufontawesomebrands0.fd) (/usr/local/texlive/2024/texmf-dist/tex/latex/fontawesome5/ufontawesomefree1.fd)
-Underfull \hbox (badness 10000) in paragraph at lines 183--187
+Underfull \hbox (badness 10000) in paragraph at lines 184--190
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 189--194
+Underfull \hbox (badness 10000) in paragraph at lines 193--200
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 197--203
+Underfull \hbox (badness 10000) in paragraph at lines 216--220
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 205--210
+Underfull \hbox (badness 10000) in paragraph at lines 221--225
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 218--222
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 223--227
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 228--232
+Underfull \hbox (badness 10000) in paragraph at lines 226--230
 
  []
 
@@ -712,14 +702,14 @@ Package logreq Info: Writing requests to 'cv.run.xml'.
  ) 
 Here is how much of TeX's memory you used:
  20488 strings out of 474116
- 372865 string characters out of 5743681
- 1954187 words of memory out of 5000000
+ 372862 string characters out of 5743681
+ 1949187 words of memory out of 5000000
  42640 multiletter control sequences out of 15000+600000
  563285 words of font info for 53 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  66i,11n,81p,1191b,803s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2024/texmf-dist/fonts/type1/public/fontawesome5/FontAwesome5Brands-Regular.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/fontawesome5/FontAwesome5Free-Solid.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
-Output written on /Users/nathancantafio/Projects/nathancantafio.com/cv/.texpadtmp/cv.pdf (1 page, 132110 bytes).
+Output written on /Users/nathancantafio/Projects/nathancantafio.com/cv/.texpadtmp/cv.pdf (1 page, 132626 bytes).
 PDF statistics:
  105 PDF objects out of 1000 (max. 8388607)
  71 compressed objects within 1 object stream
