@@ -1,9 +1,9 @@
 [0] Config.pm:307> INFO - This is Biber 2.19
 [0] Config.pm:310> INFO - Logfile is '/Users/nathancantafio/Projects/nathancantafio.com/cv/.texpadtmp/cv.blg'
-[27] biber-darwin:340> INFO - === Thu Feb 26, 2026, 12:55:30
-[33] Biber.pm:419> INFO - Reading '/Users/nathancantafio/Projects/nathancantafio.com/cv/.texpadtmp/cv.bcf'
-[61] Biber.pm:979> INFO - Found 0 citekeys in bib section 0
-[66] bbl.pm:660> INFO - Writing '/Users/nathancantafio/Projects/nathancantafio.com/cv/.texpadtmp/cv.bbl' with encoding 'UTF-8'
-[66] bbl.pm:763> INFO - Output to /Users/nathancantafio/Projects/nathancantafio.com/cv/.texpadtmp/cv.bbl
-[66] Biber.pm:131> WARN - The file '/Users/nathancantafio/Projects/nathancantafio.com/cv/.texpadtmp/cv.bcf' does not contain any citations!
-[66] Biber.pm:133> INFO - WARNINGS: 1
+[24] biber-darwin:340> INFO - === Thu Apr 23, 2026, 16:51:00
+[29] Biber.pm:419> INFO - Reading '/Users/nathancantafio/Projects/nathancantafio.com/cv/.texpadtmp/cv.bcf'
+[55] Biber.pm:979> INFO - Found 0 citekeys in bib section 0
+[61] bbl.pm:660> INFO - Writing '/Users/nathancantafio/Projects/nathancantafio.com/cv/.texpadtmp/cv.bbl' with encoding 'UTF-8'
+[61] bbl.pm:763> INFO - Output to /Users/nathancantafio/Projects/nathancantafio.com/cv/.texpadtmp/cv.bbl
+[61] Biber.pm:131> WARN - The file '/Users/nathancantafio/Projects/nathancantafio.com/cv/.texpadtmp/cv.bcf' does not contain any citations!
+[61] Biber.pm:133> INFO - WARNINGS: 1
