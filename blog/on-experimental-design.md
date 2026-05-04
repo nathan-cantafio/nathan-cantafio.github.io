@@ -1,6 +1,6 @@
 ---
 title: On Experimental Design
-date: 2026-05-01
+date: 2026-05-04
 description: A rigorous treatment of experimental design, showing how support, orthogonality, and balance determine identifiability, variance, and what OLS actually estimates.
 ---
 
