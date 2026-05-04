@@ -6,9 +6,15 @@
         "description": "The justification for using MLE estimates seems fairly intuitive, but this post makes an argument for why it isn't."
     },
     {
-        "title": "Pokémon Team Building as an Optimization Problem",
+        "title": "Pokémon Team Building",
         "date": "2025-12-20",
         "file": "pokemon-team-opt.md",
         "description": "A population-based optimization framework for Pokémon team building, using simulated battles to evaluate noisy black-box objectives over large combinatorial spaces."
-    }
+    },
+    {
+    	"title": "On Experimental Design",
+    	"date": "2026-05-04",
+    	"file": "on-experimental-design.md",
+    	"description": "A rigorous treatment of experimental design, showing how support, orthogonality, and balance determine identifiability, variance, and what OLS actually estimates."
+   }    
 ]

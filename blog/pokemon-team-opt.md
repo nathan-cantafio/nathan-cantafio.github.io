@@ -1,5 +1,5 @@
 ---
-title: Pokémon Team Building as an Optimization Problem
+title: Pokémon Team Building
 date: 2025-12-20
 description: A population-based optimization framework for Pokémon team building, using simulated battles to evaluate noisy black-box objectives over large combinatorial spaces.
 ---
