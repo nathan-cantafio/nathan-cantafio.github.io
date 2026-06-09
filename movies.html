@@ -470,10 +470,10 @@
       return d.toLocaleDateString('en-CA', { year: 'numeric', month: 'short', day: 'numeric' });
     }
 
-    let topShown = 10;
+    let topShown = 12;
     
     function renderGrid(resetCount = true) {
-      if (resetCount) topShown = 10;
+      if (resetCount) topShown = 12;
     
       const data = filtered()
         .filter(m => m.rating >= 4)
@@ -509,7 +509,7 @@
     }
     
     function showMoreTop() {
-      topShown += 50;
+      topShown += 40;
       renderGrid(false);
     }
 
