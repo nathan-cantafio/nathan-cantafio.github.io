@@ -411,20 +411,26 @@
       });
     }
 
-    function renderRecentList() {
+    let recentShown = 10;
+    
+    function renderRecentList(resetCount = true) {
+      if (resetCount) recentShown = 10;
+    
       const dated = filtered()
         .filter(m => m.watchYear)
         .sort((a, b) => b.date.localeCompare(a.date));
-      const undated = filtered()
-        .filter(m => !m.watchYear);
-    
+      const undated = filtered().filter(m => !m.watchYear);
       const data = [...dated, ...undated];
+    
       document.getElementById('recentTitle').textContent = `Recently watched (${data.length})`;
     
       if (!data.length) {
         document.getElementById('recentList').innerHTML = '<p class="no-data">No entries for this filter.</p>';
         return;
       }
+    
+      const visible = data.slice(0, recentShown);
+      const remaining = data.length - recentShown;
     
       document.getElementById('recentList').innerHTML = `
         <table style="width:100%; border-collapse:collapse; font-size:13px;">
@@ -437,7 +443,7 @@
             </tr>
           </thead>
           <tbody>
-            ${data.map(m => `
+            ${visible.map(m => `
               <tr style="border-bottom: 0.5px solid var(--border-light);">
                 <td style="padding:8px 8px; color:var(--brown-dark); font-weight:400;">${m.title} <span style="color:var(--brown-muted); font-weight:300;">(${m.year})</span></td>
                 <td style="padding:8px 8px; color:var(--brown-muted);">${m.type}</td>
@@ -445,7 +451,17 @@
                 <td style="padding:8px 8px; color:var(--accent);">${stars(m.rating)}</td>
               </tr>`).join('')}
           </tbody>
-        </table>`;
+        </table>
+        ${remaining > 0 ? `
+          <button class="pill" style="margin-top:12px;" onclick="showMoreRecent()">
+            Show ${Math.min(remaining, 50)} more
+          </button>` : ''}
+      `;
+    }
+    
+    function showMoreRecent() {
+      recentShown += 50;
+      renderRecentList(false);
     }
     
     function formatDate(dateStr) {
