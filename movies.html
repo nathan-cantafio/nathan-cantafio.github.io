@@ -470,17 +470,47 @@
       return d.toLocaleDateString('en-CA', { year: 'numeric', month: 'short', day: 'numeric' });
     }
 
-    function renderGrid() {
-      const data = filtered().filter(m => m.rating >= 4).sort((a, b) => b.rating - a.rating || a.title.localeCompare(b.title));
+    let topShown = 10;
+    
+    function renderGrid(resetCount = true) {
+      if (resetCount) topShown = 10;
+    
+      const data = filtered()
+        .filter(m => m.rating >= 4)
+        .sort((a, b) => b.rating - a.rating || a.title.localeCompare(b.title));
+    
       document.getElementById('topTitle').textContent = `Top rated (${data.length})`;
-      document.getElementById('movieGrid').innerHTML = data.length
-        ? data.map(m => `
-          <div class="movie-card">
-            <div class="movie-stars">${stars(m.rating)}</div>
-            <div class="movie-title" title="${m.title}">${m.title}</div>
-            <div class="movie-meta">${m.year} · ${m.type}</div>
-          </div>`).join('')
-        : '<p class="no-data">No top-rated titles for this filter.</p>';
+    
+      if (!data.length) {
+        document.getElementById('movieGrid').innerHTML = '<p class="no-data">No top-rated titles for this filter.</p>';
+        return;
+      }
+    
+      const visible = data.slice(0, topShown);
+      const remaining = data.length - topShown;
+    
+      document.getElementById('movieGrid').innerHTML = visible.map(m => `
+        <div class="movie-card">
+          <div class="movie-stars">${stars(m.rating)}</div>
+          <div class="movie-title" title="${m.title}">${m.title}</div>
+          <div class="movie-meta">${m.year} · ${m.type}</div>
+        </div>`).join('');
+    
+      const grid = document.getElementById('movieGrid');
+      if (remaining > 0) {
+        const btn = document.createElement('button');
+        btn.className = 'pill';
+        btn.style.marginTop = '12px';
+        btn.style.gridColumn = '1 / -1';
+        btn.textContent = `Show ${Math.min(remaining, 50)} more`;
+        btn.onclick = showMoreTop;
+        grid.appendChild(btn);
+      }
+    }
+    
+    function showMoreTop() {
+      topShown += 50;
+      renderGrid(false);
     }
 
     function renderAll() { renderMetrics(); renderBar(); renderRecentList(); renderGrid(); }
