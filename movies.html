@@ -1,0 +1,206 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); }
+.dash { padding: 1.5rem 0; }
+.metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-bottom: 1.5rem; }
+.metric { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 0.875rem 1rem; }
+.metric-label { font-size: 12px; color: var(--color-text-secondary); margin-bottom: 4px; }
+.metric-value { font-size: 22px; font-weight: 500; color: var(--color-text-primary); }
+.metric-sub { font-size: 11px; color: var(--color-text-tertiary); margin-top: 2px; }
+.section { margin-bottom: 1.75rem; }
+.section-title { font-size: 13px; font-weight: 500; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 10px; }
+.chart-wrap { position: relative; width: 100%; }
+.filters { display: flex; gap: 8px; margin-bottom: 1rem; flex-wrap: wrap; }
+.pill { font-size: 12px; padding: 4px 12px; border-radius: 99px; border: 0.5px solid var(--color-border-secondary); background: var(--color-background-primary); color: var(--color-text-secondary); cursor: pointer; transition: all 0.15s; }
+.pill.active { background: var(--color-text-primary); color: var(--color-background-primary); border-color: var(--color-text-primary); }
+.movie-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px; }
+.movie-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 10px 12px; }
+.movie-title { font-size: 13px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.movie-meta { font-size: 11px; color: var(--color-text-tertiary); }
+.stars { color: #d4a017; font-size: 13px; margin-bottom: 2px; }
+.legend { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 8px; font-size: 12px; color: var(--color-text-secondary); }
+.legend span { display: flex; align-items: center; gap: 5px; }
+.legend-dot { width: 10px; height: 10px; border-radius: 2px; }
+</style>
+
+<div class="dash">
+  <h2 style="font-size:18px;font-weight:500;color:var(--color-text-primary);margin-bottom:1.25rem;">My watchlist</h2>
+
+  <div class="metrics" id="metrics"></div>
+
+  <div class="filters">
+    <button class="pill active" onclick="setFilter('all')">All</button>
+    <button class="pill" onclick="setFilter('Movie')">Movies</button>
+    <button class="pill" onclick="setFilter('TV Show')">TV shows</button>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Ratings breakdown</div>
+    <div class="legend">
+      <span><span class="legend-dot" style="background:#3266ad"></span>Movies</span>
+      <span><span class="legend-dot" style="background:#73726c"></span>TV shows</span>
+    </div>
+    <div class="chart-wrap" id="barWrap"><canvas id="barChart" role="img" aria-label="Bar chart showing count of movies and TV shows per rating from 1 to 5"></canvas></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Rating over time</div>
+    <div class="chart-wrap" style="height:220px"><canvas id="lineChart" role="img" aria-label="Line chart showing ratings of recently watched titles over time"></canvas></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title" id="topTitle">Top rated</div>
+    <div class="movie-grid" id="movieGrid"></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+let RAW = [];
+
+function parseCSV(text) {
+  const lines = text.trim().split('\n');
+  const rows = lines.slice(1);
+  return rows.map(row => {
+    const cols = row.match(/(".*?"|[^,]+)(?=,|$)/g) || [];
+    const clean = cols.map(c => c.replace(/^"|"$/g, '').trim());
+    return {
+      title: clean[1] || '',
+      year: parseInt(clean[2]) || 0,
+      type: clean[3] || 'Movie',
+      rating: parseInt(clean[5]) || 0,
+      date: clean[0] || null
+    };
+  }).filter(m => m.title && m.rating);
+}
+
+const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQMyFIHvgJkpT1uvZr_FQ2HZRE6ZWyyzRWQvUYlon5n_vkCJqr1HxhpIERYa6VFzzuxTGmgRRbfDroa/pub?gid=2011963051&single=true&output=csv";
+
+fetch(SHEET_URL)
+  .then(r => r.text())
+  .then(text => {
+    RAW = parseCSV(text);
+    renderMetrics();
+    renderBar();
+    renderLine();
+    renderGrid();
+  });
+let activeFilter = 'all';
+
+function stars(n) { return '★'.repeat(n) + '☆'.repeat(5-n); }
+
+function filtered() {
+  if (activeFilter === 'all') return RAW;
+  return RAW.filter(m => m.type === activeFilter);
+}
+
+function setFilter(f) {
+  activeFilter = f;
+  document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+  event.target.classList.add('active');
+  renderMetrics();
+  renderBar();
+  renderGrid();
+}
+
+function renderMetrics() {
+  const data = filtered();
+  const avg = data.reduce((s,m) => s+m.rating, 0) / data.length;
+  const fiveStars = data.filter(m => m.rating === 5).length;
+  const oneStar = data.filter(m => m.rating === 1).length;
+  document.getElementById('metrics').innerHTML = `
+    <div class="metric"><div class="metric-label">Watched</div><div class="metric-value">${data.length}</div><div class="metric-sub">titles total</div></div>
+    <div class="metric"><div class="metric-label">Avg rating</div><div class="metric-value">${avg.toFixed(1)}</div><div class="metric-sub">out of 5</div></div>
+    <div class="metric"><div class="metric-label">★★★★★</div><div class="metric-value">${fiveStars}</div><div class="metric-sub">${Math.round(fiveStars/data.length*100)}% of total</div></div>
+    <div class="metric"><div class="metric-label">★☆☆☆☆</div><div class="metric-value">${oneStar}</div><div class="metric-sub">not for me</div></div>
+  `;
+}
+
+let barInstance = null;
+function renderBar() {
+  const data = filtered();
+  const movies = RAW.filter(m => m.type === 'Movie');
+  const shows = RAW.filter(m => m.type === 'TV Show');
+  const counts = (arr) => [1,2,3,4,5].map(r => arr.filter(m => m.rating === r).length);
+
+  const wrap = document.getElementById('barWrap');
+  const totalBars = activeFilter === 'all' ? 10 : 5;
+  wrap.style.height = Math.max(220, totalBars * 36 + 60) + 'px';
+
+  if (barInstance) barInstance.destroy();
+
+  const datasets = activeFilter === 'all'
+    ? [
+        { label: 'Movies', data: counts(movies), backgroundColor: '#3266ad', borderRadius: 3 },
+        { label: 'TV shows', data: counts(shows), backgroundColor: '#73726c', borderRadius: 3 }
+      ]
+    : [
+        { label: activeFilter === 'Movie' ? 'Movies' : 'TV shows',
+          data: counts(data),
+          backgroundColor: activeFilter === 'Movie' ? '#3266ad' : '#73726c',
+          borderRadius: 3 }
+      ];
+
+  barInstance = new Chart(document.getElementById('barChart'), {
+    type: 'bar',
+    data: { labels: ['★☆☆☆☆','★★☆☆☆','★★★☆☆','★★★★☆','★★★★★'], datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { stacked: false, grid: { display: false }, ticks: { color: '#888' } },
+        y: { ticks: { stepSize: 1, color: '#888', precision: 0 }, grid: { color: 'rgba(128,128,128,0.1)' } }
+      }
+    }
+  });
+}
+
+let lineInstance = null;
+function renderLine() {
+  const timed = RAW.filter(m => m.date && m.date !== '2000-01-01').sort((a,b) => a.date.localeCompare(b.date));
+  const labels = timed.map(m => { const d = new Date(m.date); return d.toLocaleDateString('en-CA',{month:'short',day:'numeric'}); });
+  const data = timed.map(m => m.rating);
+  const colors = timed.map(m => m.type === 'Movie' ? '#3266ad' : '#73726c');
+
+  if (lineInstance) lineInstance.destroy();
+  lineInstance = new Chart(document.getElementById('lineChart'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Rating',
+        data,
+        borderColor: '#3266ad',
+        backgroundColor: 'rgba(50,102,173,0.08)',
+        pointBackgroundColor: colors,
+        pointRadius: 5,
+        tension: 0.3,
+        fill: true
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: {
+        callbacks: { title: (items) => timed[items[0].dataIndex].title }
+      }},
+      scales: {
+        x: { ticks: { color: '#888', maxRotation: 45, autoSkip: false }, grid: { display: false } },
+        y: { min: 0, max: 5, ticks: { stepSize: 1, color: '#888' }, grid: { color: 'rgba(128,128,128,0.1)' } }
+      }
+    }
+  });
+}
+
+function renderGrid() {
+  const data = filtered().filter(m => m.rating >= 4).sort((a,b) => b.rating - a.rating || a.title.localeCompare(b.title));
+  document.getElementById('topTitle').textContent = `Top rated (${data.length})`;
+  document.getElementById('movieGrid').innerHTML = data.map(m => `
+    <div class="movie-card">
+      <div class="stars">${stars(m.rating)}</div>
+      <div class="movie-title" title="${m.title}">${m.title}</div>
+      <div class="movie-meta">${m.year} · ${m.type}</div>
+    </div>
+  `).join('');
+}
+</script>
