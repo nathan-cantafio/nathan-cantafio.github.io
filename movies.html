@@ -242,22 +242,16 @@
           </div>
         </div>
 
-        <!-- Rating over time -->
-        <div class="chart-section">
-          <h2 class="section-title">Rating over time</h2>
-          <div class="legend-row">
-            <div class="legend-item"><span class="legend-dot" style="background:#8B4513"></span>Movie</div>
-            <div class="legend-item"><span class="legend-dot" style="background:#a08060"></span>TV show</div>
-          </div>
-          <div class="chart-wrap" style="height:220px">
-            <canvas id="lineChart" role="img" aria-label="Line chart showing ratings of recently watched titles over time"></canvas>
-          </div>
-        </div>
-
         <!-- Top rated grid -->
         <div class="chart-section">
           <h2 class="section-title" id="topTitle">Top rated</h2>
           <div class="movie-grid" id="movieGrid"></div>
+        </div>
+
+        <!-- Recently watched list -->
+        <div class="chart-section">
+          <h2 class="section-title" id="recentTitle">Recently watched</h2>
+          <div id="recentList"></div>
         </div>
 
       </div><!-- /.dash -->
@@ -409,47 +403,47 @@
       });
     }
 
-    let lineInstance = null;
-    function renderLine() {
-      const timed = RAW
-        .filter(m => m.watchYear && parseInt(m.watchYear) > 2000)
-        .filter(m => activeYear === 'all' || m.watchYear === activeYear)
-        .filter(m => activeType === 'all' || m.type === activeType)
-        .sort((a, b) => a.date.localeCompare(b.date));
-      if (lineInstance) lineInstance.destroy();
-      if (!timed.length) return;
-      const labels = timed.map(m => {
-        const d = new Date(m.date);
-        return d.toLocaleDateString('en-CA', { month: 'short', day: 'numeric' });
-      });
-      lineInstance = new Chart(document.getElementById('lineChart'), {
-        type: 'line',
-        data: {
-          labels,
-          datasets: [{
-            label: 'Rating',
-            data: timed.map(m => m.rating),
-            borderColor: '#C67C3E',
-            backgroundColor: 'rgba(198,124,62,0.07)',
-            pointBackgroundColor: timed.map(m => m.type === 'Movie' ? '#8B4513' : '#a08060'),
-            pointRadius: 5,
-            tension: 0.3,
-            fill: true
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: { display: false },
-            tooltip: { callbacks: { title: items => timed[items[0].dataIndex].title } }
-          },
-          scales: {
-            x: { ticks: { color: '#a08060', maxRotation: 45, autoSkip: false, font: { size: 10 } }, grid: { display: false } },
-            y: { min: 0, max: 5, ticks: { stepSize: 1, color: '#a08060' }, grid: { color: 'rgba(165,128,96,0.15)' } }
-          }
-        }
-      });
+    function renderRecentList() {
+      const dated = filtered()
+        .filter(m => m.watchYear)
+        .sort((a, b) => b.date.localeCompare(a.date));
+      const undated = filtered()
+        .filter(m => !m.watchYear);
+    
+      const data = [...dated, ...undated];
+      document.getElementById('recentTitle').textContent = `Recently watched (${data.length})`;
+    
+      if (!data.length) {
+        document.getElementById('recentList').innerHTML = '<p class="no-data">No entries for this filter.</p>';
+        return;
+      }
+    
+      document.getElementById('recentList').innerHTML = `
+        <table style="width:100%; border-collapse:collapse; font-size:13px;">
+          <thead>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <th style="text-align:left; padding:6px 8px; font-weight:500; font-size:10px; letter-spacing:1px; text-transform:uppercase; color:var(--brown-muted);">Title</th>
+              <th style="text-align:left; padding:6px 8px; font-weight:500; font-size:10px; letter-spacing:1px; text-transform:uppercase; color:var(--brown-muted);">Type</th>
+              <th style="text-align:left; padding:6px 8px; font-weight:500; font-size:10px; letter-spacing:1px; text-transform:uppercase; color:var(--brown-muted);">Watched</th>
+              <th style="text-align:left; padding:6px 8px; font-weight:500; font-size:10px; letter-spacing:1px; text-transform:uppercase; color:var(--brown-muted);">Rating</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${data.map(m => `
+              <tr style="border-bottom: 0.5px solid var(--border-light);">
+                <td style="padding:8px 8px; color:var(--brown-dark); font-weight:400;">${m.title} <span style="color:var(--brown-muted); font-weight:300;">(${m.year})</span></td>
+                <td style="padding:8px 8px; color:var(--brown-muted);">${m.type}</td>
+                <td style="padding:8px 8px; color:var(--brown-muted);">${m.watchYear ? formatDate(m.date) : '—'}</td>
+                <td style="padding:8px 8px; color:var(--accent);">${stars(m.rating)}</td>
+              </tr>`).join('')}
+          </tbody>
+        </table>`;
+    }
+    
+    function formatDate(dateStr) {
+      const d = new Date(dateStr);
+      if (isNaN(d)) return '—';
+      return d.toLocaleDateString('en-CA', { year: 'numeric', month: 'short', day: 'numeric' });
     }
 
     function renderGrid() {
@@ -465,7 +459,7 @@
         : '<p class="no-data">No top-rated titles for this filter.</p>';
     }
 
-    function renderAll() { renderMetrics(); renderBar(); renderLine(); renderGrid(); }
+    function renderAll() { renderMetrics(); renderBar(); renderRecentList(); renderGrid(); }
 
     fetch(SHEET_URL)
       .then(r => r.text())
