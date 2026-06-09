@@ -194,8 +194,8 @@
     <main class="main-content">
 
       <div class="dash">
-        <p class="page-eyebrow">My watchlist</p>
-        <h1 class="page-title">Movies &amp; TV dashboard</h1>
+        <p class="page-eyebrow">Movies &amp; TV dashboard</p>
+        <h1 class="page-title">My Watchlist</h1>
 
         <!-- Rating legend -->
         <div class="rating-legend">
@@ -217,11 +217,8 @@
           <button class="pill" onclick="setType('Movie',this)">Movies</button>
           <button class="pill" onclick="setType('TV Show',this)">TV shows</button>
         </div>
-        <div class="filter-row" style="margin-bottom:1.75rem">
+        <div class="filter-row" style="margin-bottom:1.75rem" id="yearFilter">
           <span class="filter-label">Year</span>
-          <button class="pill active" onclick="setYear('all',this)">All time</button>
-          <button class="pill" onclick="setYear('2026',this)">2026</button>
-          <button class="pill" onclick="setYear('2025',this)">2025</button>
         </div>
 
         <!-- Metric cards -->
@@ -303,6 +300,25 @@
         const typeOk = activeType === 'all' || m.type === activeType;
         const yearOk = activeYear === 'all' || m.watchYear === activeYear;
         return typeOk && yearOk;
+      });
+    }
+
+    function renderYearPills() {
+      const years = [...new Set(RAW.map(m => m.watchYear).filter(Boolean))]
+        .sort((a, b) => b - a);
+      const row = document.getElementById('yearFilter');
+      row.innerHTML = '<span class="filter-label">Year</span>';
+      const allBtn = document.createElement('button');
+      allBtn.className = 'pill active';
+      allBtn.textContent = 'All time';
+      allBtn.onclick = function() { setYear('all', this); };
+      row.appendChild(allBtn);
+      years.forEach(y => {
+        const btn = document.createElement('button');
+        btn.className = 'pill';
+        btn.textContent = y;
+        btn.onclick = function() { setYear(y, this); };
+        row.appendChild(btn);
       });
     }
 
@@ -453,7 +469,7 @@
 
     fetch(SHEET_URL)
       .then(r => r.text())
-      .then(text => { RAW = parseCSV(text); renderAll(); })
+      .then(text => { RAW = parseCSV(text); renderYearPills(); renderAll(); })
       .catch(() => {
         document.getElementById('metrics').innerHTML = '<p class="no-data">Could not load sheet data. Check the published URL.</p>';
       });
