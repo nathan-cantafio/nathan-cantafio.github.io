@@ -278,6 +278,14 @@
         let watchYear = null;
         const d = new Date(rawDate);
         if (!isNaN(d) && d.getFullYear() > 2000) watchYear = String(d.getFullYear());
+        const seen = new Map();
+        parsed.forEach(m => {
+          const key = m.title.toLowerCase() + '|' + m.year;
+          if (!seen.has(key) || m.date > seen.get(key).date) {
+            seen.set(key, m);
+          }
+        });
+        return [...seen.values()].filter(m => m.title && m.rating);
         return {
           title: c[1] || '',
           year: parseInt(c[2]) || 0,
