@@ -268,23 +268,15 @@
 
     const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQMyFIHvgJkpT1uvZr_FQ2HZRE6ZWyyzRWQvUYlon5n_vkCJqr1HxhpIERYa6VFzzuxTGmgRRbfDroa/pub?gid=2011963051&single=true&output=csv";
 
-    function parseCSV(text) {
+	function parseCSV(text) {
       const lines = text.trim().split('\n');
-      return lines.slice(1).map(row => {
+      const entries = lines.slice(1).map(row => {
         const cols = row.match(/(".*?"|[^,]+)(?=,|$)/g) || [];
         const c = cols.map(x => x.replace(/^"|"$/g, '').trim());
         const rawDate = c[0] || '';
         let watchYear = null;
         const d = new Date(rawDate);
         if (!isNaN(d) && d.getFullYear() > 2000) watchYear = String(d.getFullYear());
-        const seen = new Map();
-        parsed.forEach(m => {
-          const key = m.title.toLowerCase() + '|' + m.year;
-          if (!seen.has(key) || m.date > seen.get(key).date) {
-            seen.set(key, m);
-          }
-        });
-        return [...seen.values()].filter(m => m.title && m.rating);
         return {
           title: c[1] || '',
           year: parseInt(c[2]) || 0,
@@ -294,6 +286,15 @@
           watchYear
         };
       }).filter(m => m.title && m.rating);
+    
+      const seen = new Map();
+      entries.forEach(m => {
+        const key = m.title.toLowerCase() + '|' + m.year;
+        if (!seen.has(key) || m.date > seen.get(key).date) {
+          seen.set(key, m);
+        }
+      });
+      return [...seen.values()];
     }
 
     function filtered() {
