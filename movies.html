@@ -1,206 +1,462 @@
+/* ===== Fonts ===== */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,600&family=DM+Sans:wght@300;400;500&display=swap');
 
-<style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: var(--font-sans); }
-.dash { padding: 1.5rem 0; }
-.metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-bottom: 1.5rem; }
-.metric { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 0.875rem 1rem; }
-.metric-label { font-size: 12px; color: var(--color-text-secondary); margin-bottom: 4px; }
-.metric-value { font-size: 22px; font-weight: 500; color: var(--color-text-primary); }
-.metric-sub { font-size: 11px; color: var(--color-text-tertiary); margin-top: 2px; }
-.section { margin-bottom: 1.75rem; }
-.section-title { font-size: 13px; font-weight: 500; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 10px; }
-.chart-wrap { position: relative; width: 100%; }
-.filters { display: flex; gap: 8px; margin-bottom: 1rem; flex-wrap: wrap; }
-.pill { font-size: 12px; padding: 4px 12px; border-radius: 99px; border: 0.5px solid var(--color-border-secondary); background: var(--color-background-primary); color: var(--color-text-secondary); cursor: pointer; transition: all 0.15s; }
-.pill.active { background: var(--color-text-primary); color: var(--color-background-primary); border-color: var(--color-text-primary); }
-.movie-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px; }
-.movie-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 10px 12px; }
-.movie-title { font-size: 13px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.movie-meta { font-size: 11px; color: var(--color-text-tertiary); }
-.stars { color: #d4a017; font-size: 13px; margin-bottom: 2px; }
-.legend { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 8px; font-size: 12px; color: var(--color-text-secondary); }
-.legend span { display: flex; align-items: center; gap: 5px; }
-.legend-dot { width: 10px; height: 10px; border-radius: 2px; }
-</style>
-
-<div class="dash">
-  <h2 style="font-size:18px;font-weight:500;color:var(--color-text-primary);margin-bottom:1.25rem;">My watchlist</h2>
-
-  <div class="metrics" id="metrics"></div>
-
-  <div class="filters">
-    <button class="pill active" onclick="setFilter('all')">All</button>
-    <button class="pill" onclick="setFilter('Movie')">Movies</button>
-    <button class="pill" onclick="setFilter('TV Show')">TV shows</button>
-  </div>
-
-  <div class="section">
-    <div class="section-title">Ratings breakdown</div>
-    <div class="legend">
-      <span><span class="legend-dot" style="background:#3266ad"></span>Movies</span>
-      <span><span class="legend-dot" style="background:#73726c"></span>TV shows</span>
-    </div>
-    <div class="chart-wrap" id="barWrap"><canvas id="barChart" role="img" aria-label="Bar chart showing count of movies and TV shows per rating from 1 to 5"></canvas></div>
-  </div>
-
-  <div class="section">
-    <div class="section-title">Rating over time</div>
-    <div class="chart-wrap" style="height:220px"><canvas id="lineChart" role="img" aria-label="Line chart showing ratings of recently watched titles over time"></canvas></div>
-  </div>
-
-  <div class="section">
-    <div class="section-title" id="topTitle">Top rated</div>
-    <div class="movie-grid" id="movieGrid"></div>
-  </div>
-</div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
-<script>
-let RAW = [];
-
-function parseCSV(text) {
-  const lines = text.trim().split('\n');
-  const rows = lines.slice(1);
-  return rows.map(row => {
-    const cols = row.match(/(".*?"|[^,]+)(?=,|$)/g) || [];
-    const clean = cols.map(c => c.replace(/^"|"$/g, '').trim());
-    return {
-      title: clean[1] || '',
-      year: parseInt(clean[2]) || 0,
-      type: clean[3] || 'Movie',
-      rating: parseInt(clean[5]) || 0,
-      date: clean[0] || null
-    };
-  }).filter(m => m.title && m.rating);
+/* ===== Variables ===== */
+:root {
+  --cream:       #F5EFE6;
+  --cream-deep:  #EDE5D8;
+  --cream-main:  #FDFAF5;
+  --brown-dark:  #2C1810;
+  --brown-mid:   #5a3825;
+  --brown-text:  #6b5545;
+  --brown-muted: #a08060;
+  --accent:      #C67C3E;
+  --accent-dark: #8B4513;
+  --border:      #d5c8b5;
+  --border-light:#e5ddd0;
 }
 
-const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQMyFIHvgJkpT1uvZr_FQ2HZRE6ZWyyzRWQvUYlon5n_vkCJqr1HxhpIERYa6VFzzuxTGmgRRbfDroa/pub?gid=2011963051&single=true&output=csv";
+/* ===== Base ===== */
+*, *::before, *::after { box-sizing: border-box; }
 
-fetch(SHEET_URL)
-  .then(r => r.text())
-  .then(text => {
-    RAW = parseCSV(text);
-    renderMetrics();
-    renderBar();
-    renderLine();
-    renderGrid();
-  });
-let activeFilter = 'all';
-
-function stars(n) { return '★'.repeat(n) + '☆'.repeat(5-n); }
-
-function filtered() {
-  if (activeFilter === 'all') return RAW;
-  return RAW.filter(m => m.type === activeFilter);
+body {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-weight: 300;
+  background-color: var(--cream);
+  color: var(--brown-dark);
+  line-height: 1.7;
+  margin: 0;
+  padding: 0;
 }
 
-function setFilter(f) {
-  activeFilter = f;
-  document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
-  event.target.classList.add('active');
-  renderMetrics();
-  renderBar();
-  renderGrid();
+a {
+  color: var(--brown-text);
+  text-decoration: none;
+}
+a:hover {
+  color: var(--accent-dark);
+  text-decoration: underline;
 }
 
-function renderMetrics() {
-  const data = filtered();
-  const avg = data.reduce((s,m) => s+m.rating, 0) / data.length;
-  const fiveStars = data.filter(m => m.rating === 5).length;
-  const oneStar = data.filter(m => m.rating === 1).length;
-  document.getElementById('metrics').innerHTML = `
-    <div class="metric"><div class="metric-label">Watched</div><div class="metric-value">${data.length}</div><div class="metric-sub">titles total</div></div>
-    <div class="metric"><div class="metric-label">Avg rating</div><div class="metric-value">${avg.toFixed(1)}</div><div class="metric-sub">out of 5</div></div>
-    <div class="metric"><div class="metric-label">★★★★★</div><div class="metric-value">${fiveStars}</div><div class="metric-sub">${Math.round(fiveStars/data.length*100)}% of total</div></div>
-    <div class="metric"><div class="metric-label">★☆☆☆☆</div><div class="metric-value">${oneStar}</div><div class="metric-sub">not for me</div></div>
-  `;
+/* ===== Header ===== */
+.header {
+  display: flex;
+  align-items: stretch;
+  padding: 0 40px;
+  min-height: 58px;
+  background: var(--brown-dark);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
-let barInstance = null;
-function renderBar() {
-  const data = filtered();
-  const movies = RAW.filter(m => m.type === 'Movie');
-  const shows = RAW.filter(m => m.type === 'TV Show');
-  const counts = (arr) => [1,2,3,4,5].map(r => arr.filter(m => m.rating === r).length);
-
-  const wrap = document.getElementById('barWrap');
-  const totalBars = activeFilter === 'all' ? 10 : 5;
-  wrap.style.height = Math.max(220, totalBars * 36 + 60) + 'px';
-
-  if (barInstance) barInstance.destroy();
-
-  const datasets = activeFilter === 'all'
-    ? [
-        { label: 'Movies', data: counts(movies), backgroundColor: '#3266ad', borderRadius: 3 },
-        { label: 'TV shows', data: counts(shows), backgroundColor: '#73726c', borderRadius: 3 }
-      ]
-    : [
-        { label: activeFilter === 'Movie' ? 'Movies' : 'TV shows',
-          data: counts(data),
-          backgroundColor: activeFilter === 'Movie' ? '#3266ad' : '#73726c',
-          borderRadius: 3 }
-      ];
-
-  barInstance = new Chart(document.getElementById('barChart'), {
-    type: 'bar',
-    data: { labels: ['★☆☆☆☆','★★☆☆☆','★★★☆☆','★★★★☆','★★★★★'], datasets },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      scales: {
-        x: { stacked: false, grid: { display: false }, ticks: { color: '#888' } },
-        y: { ticks: { stepSize: 1, color: '#888', precision: 0 }, grid: { color: 'rgba(128,128,128,0.1)' } }
-      }
-    }
-  });
+.header-content {
+  display: flex;
+  align-items: center;
+  margin-right: auto;
 }
 
-let lineInstance = null;
-function renderLine() {
-  const timed = RAW.filter(m => m.date && m.date !== '2000-01-01').sort((a,b) => a.date.localeCompare(b.date));
-  const labels = timed.map(m => { const d = new Date(m.date); return d.toLocaleDateString('en-CA',{month:'short',day:'numeric'}); });
-  const data = timed.map(m => m.rating);
-  const colors = timed.map(m => m.type === 'Movie' ? '#3266ad' : '#73726c');
-
-  if (lineInstance) lineInstance.destroy();
-  lineInstance = new Chart(document.getElementById('lineChart'), {
-    type: 'line',
-    data: {
-      labels,
-      datasets: [{
-        label: 'Rating',
-        data,
-        borderColor: '#3266ad',
-        backgroundColor: 'rgba(50,102,173,0.08)',
-        pointBackgroundColor: colors,
-        pointRadius: 5,
-        tension: 0.3,
-        fill: true
-      }]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: false }, tooltip: {
-        callbacks: { title: (items) => timed[items[0].dataIndex].title }
-      }},
-      scales: {
-        x: { ticks: { color: '#888', maxRotation: 45, autoSkip: false }, grid: { display: false } },
-        y: { min: 0, max: 5, ticks: { stepSize: 1, color: '#888' }, grid: { color: 'rgba(128,128,128,0.1)' } }
-      }
-    }
-  });
+.home-link {
+  text-decoration: none;
+  color: inherit;
 }
 
-function renderGrid() {
-  const data = filtered().filter(m => m.rating >= 4).sort((a,b) => b.rating - a.rating || a.title.localeCompare(b.title));
-  document.getElementById('topTitle').textContent = `Top rated (${data.length})`;
-  document.getElementById('movieGrid').innerHTML = data.map(m => `
-    <div class="movie-card">
-      <div class="stars">${stars(m.rating)}</div>
-      <div class="movie-title" title="${m.title}">${m.title}</div>
-      <div class="movie-meta">${m.year} · ${m.type}</div>
-    </div>
-  `).join('');
+.header h1 {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 25px;
+  font-weight: 600;
+  color: var(--cream);
+  margin: 0;
+  letter-spacing: 0.2px;
 }
-</script>
+
+.header-nav {
+  display: flex;
+  gap: 0;
+  height: 100%;
+}
+
+.header-nav a {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--brown-muted);
+  padding: 20px 30px;
+  display: flex;
+  align-items: center;
+  border-left: 0.5px solid rgba(245, 239, 230, 0.12);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.header-nav a:hover {
+  color: var(--cream);
+  text-decoration: none;
+}
+
+.header-nav a.active {
+  background: var(--cream);
+  color: var(--brown-dark);
+}
+
+/* ===== Layout ===== */
+.page-layout {
+  display: flex;
+  max-width: 1100px;
+  margin: 0 auto;
+  min-height: calc(100vh - 58px);
+  border-left: 0.5px solid var(--border);
+  border-right: 0.5px solid var(--border);
+  background: var(--cream-main);
+}
+
+/* #sidebar is the flex child; .sidebar is the injected partial inside it */
+#sidebar {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== Sidebar ===== */
+.sidebar {
+  flex: 1;
+  width: 220px;
+  background: var(--cream-deep);
+  border-right: 0.5px solid var(--border);
+  padding: 28px 22px;
+}
+
+.sidebar-profile-image {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 3px;
+  display: block;
+  margin-bottom: 22px;
+}
+
+.sidebar-section {
+  margin-top: 20px;
+}
+
+.sidebar-section h3 {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--brown-dark);
+  margin: 0 0 8px 0;
+  letter-spacing: 0.1px;
+  border: none;
+}
+
+.sidebar-section a,
+.sidebar-section p {
+  display: block;
+  font-size: 12px;
+  font-weight: 300;
+  color: var(--brown-text);
+  margin-bottom: 5px;
+  line-height: 1.5;
+  text-decoration: none;
+}
+
+.sidebar-section a:hover {
+  color: var(--accent-dark);
+  text-decoration: underline;
+}
+
+.sidebar-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-section ul li {
+  margin-bottom: 5px;
+}
+
+.see-all-posts-link {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--accent) !important;
+  text-decoration: none;
+}
+
+.see-all-posts-link:hover {
+  text-decoration: underline;
+  color: var(--accent-dark) !important;
+}
+
+/* ===== Main Content ===== */
+.main-content {
+  flex: 1;
+  padding: 40px 48px;
+  background: var(--cream-main);
+  max-width: 880px;
+}
+
+.name-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 50px;
+  font-weight: 600;
+  color: var(--brown-dark);
+  letter-spacing: -0.5px;
+  line-height: 1.1;
+  margin: 0 0 -5px 0;
+}
+
+.main-content p {
+  font-size: 14.5px;
+  font-weight: 300;
+  line-height: 1.85;
+  color: var(--brown-dark);
+  margin-bottom: 1em;
+  max-width: 780px;
+}
+
+.main-content em {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--accent-dark);
+}
+
+.page-eyebrow {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 1.3px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 20px 0;
+}
+
+/* ===== Page & Section Titles ===== */
+.page-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--brown-dark);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 10px;
+  margin-bottom: 2rem;
+  letter-spacing: 0.2px;
+}
+
+.section-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--brown-dark);
+  margin-top: 2.5rem;
+  margin-bottom: 1.25rem;
+  letter-spacing: 0.2px;
+}
+
+.content-rule {
+  width: 28px;
+  height: 2px;
+  background: var(--accent);
+  margin: 28px 0;
+  border: none;
+}
+
+/* ===== Blog: Recent & All Posts ===== */
+#recent-posts {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#recent-posts li {
+  margin-bottom: 6px;
+}
+
+#recent-posts li a {
+  font-size: 12px;
+  font-weight: 300;
+  color: var(--brown-text);
+}
+
+#all-posts-list,
+#recent-posts-main {
+  list-style: none;
+  padding: 0;
+  margin-top: 8px;
+}
+
+#all-posts-list li {
+  padding: 12px 0;
+  border-bottom: 0.5px solid var(--border-light);
+  display: grid;
+  grid-template-columns: 2fr 90px 3fr;
+  gap: 16px;
+  align-items: start;
+}
+
+#recent-posts-main li {
+  padding: 12px 0;
+  border-bottom: 0.5px solid var(--border-light);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+}
+
+#all-posts-list a,
+#recent-posts-main a {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--brown-dark);
+  text-decoration: none;
+}
+
+#all-posts-list a:hover,
+#recent-posts-main a:hover {
+  color: var(--accent-dark);
+  text-decoration: underline;
+}
+
+.post-date {
+  font-size: 11px;
+  color: var(--brown-muted);
+  font-weight: 300;
+  flex-shrink: 0;
+}
+
+.post-description {
+  font-size: 12.5px;
+  font-weight: 300;
+  color: var(--brown-text);
+  margin-top: 3px;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+  color: var(--accent-dark);
+}
+
+/* ===== CV Styles ===== */
+.cv-section { margin-bottom: 2.5rem; }
+
+.cv-section h3 {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--brown-mid);
+  margin-bottom: 0.75rem;
+  padding-bottom: 6px;
+  border-bottom: 0.5px solid var(--border);
+}
+
+.cv-entry { margin-bottom: 1.25rem; }
+
+.cv-entry h4 {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--brown-dark);
+  margin-bottom: 0;
+}
+
+.cv-entry p {
+  margin-top: 2px;
+  font-size: 13px;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--brown-text);
+}
+
+.cv-entry ul {
+  margin-top: 8px;
+  padding-left: 18px;
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--brown-dark);
+}
+
+/* ===== Blog post content ===== */
+.main-content h2,
+.main-content h3 {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 600;
+  color: var(--brown-dark);
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+.main-content h2 { font-size: 28px; }
+.main-content h3 { font-size: 22px; }
+
+.main-content blockquote {
+  border-left: 2px solid var(--accent);
+  padding-left: 1.25rem;
+  margin: 1.5rem 0;
+  color: var(--brown-text);
+  font-style: italic;
+}
+
+.main-content code {
+  font-family: 'IBM Plex Mono', 'Courier New', monospace;
+  font-size: 13px;
+  background: var(--cream-deep);
+  padding: 1px 5px;
+  border-radius: 2px;
+  color: var(--brown-dark);
+}
+
+.main-content pre {
+  background: var(--cream-deep);
+  border: 0.5px solid var(--border);
+  border-radius: 4px;
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+
+.main-content pre code {
+  background: none;
+  padding: 0;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .page-layout {
+    flex-direction: column;
+    border-left: none;
+    border-right: none;
+  }
+
+  .sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 0.5px solid var(--border);
+    padding: 24px 20px;
+  }
+
+  .main-content {
+    padding: 28px 20px;
+  }
+
+  .header {
+    padding: 0 20px;
+  }
+
+  .header-nav a {
+    padding: 0 14px;
+    font-size: 11px;
+  }
+}
+
+
