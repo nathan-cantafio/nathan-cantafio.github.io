@@ -1,462 +1,463 @@
-/* ===== Fonts ===== */
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,600&family=DM+Sans:wght@300;400;500&display=swap');
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Movies & TV — Watchlist</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Chart.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+  <style>
+    /* ===== Dashboard-specific styles ===== */
+    .dash { padding: 0; }
 
-/* ===== Variables ===== */
-:root {
-  --cream:       #F5EFE6;
-  --cream-deep:  #EDE5D8;
-  --cream-main:  #FDFAF5;
-  --brown-dark:  #2C1810;
-  --brown-mid:   #5a3825;
-  --brown-text:  #6b5545;
-  --brown-muted: #a08060;
-  --accent:      #C67C3E;
-  --accent-dark: #8B4513;
-  --border:      #d5c8b5;
-  --border-light:#e5ddd0;
-}
+    .eyebrow {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 1.3px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
 
-/* ===== Base ===== */
-*, *::before, *::after { box-sizing: border-box; }
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 10px;
+      margin-bottom: 1.5rem;
+    }
 
-body {
-  font-family: 'DM Sans', system-ui, sans-serif;
-  font-weight: 300;
-  background-color: var(--cream);
-  color: var(--brown-dark);
-  line-height: 1.7;
-  margin: 0;
-  padding: 0;
-}
+    .metric {
+      background: var(--cream-deep);
+      border-radius: 4px;
+      padding: 0.875rem 1rem;
+    }
 
-a {
-  color: var(--brown-text);
-  text-decoration: none;
-}
-a:hover {
-  color: var(--accent-dark);
-  text-decoration: underline;
-}
+    .metric-label {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--brown-muted);
+      margin-bottom: 4px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
 
-/* ===== Header ===== */
-.header {
-  display: flex;
-  align-items: stretch;
-  padding: 0 40px;
-  min-height: 58px;
-  background: var(--brown-dark);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
+    .metric-value {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--brown-dark);
+      line-height: 1;
+    }
 
-.header-content {
-  display: flex;
-  align-items: center;
-  margin-right: auto;
-}
+    .metric-sub {
+      font-size: 11px;
+      color: var(--brown-muted);
+      margin-top: 3px;
+    }
 
-.home-link {
-  text-decoration: none;
-  color: inherit;
-}
+    .filter-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 0.75rem;
+      align-items: center;
+    }
 
-.header h1 {
-  font-family: 'Cormorant Garamond', Georgia, serif;
-  font-size: 25px;
-  font-weight: 600;
-  color: var(--cream);
-  margin: 0;
-  letter-spacing: 0.2px;
-}
+    .filter-label {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--brown-muted);
+      margin-right: 4px;
+    }
 
-.header-nav {
-  display: flex;
-  gap: 0;
-  height: 100%;
-}
+    .pill {
+      font-size: 11px;
+      font-weight: 400;
+      font-family: 'DM Sans', sans-serif;
+      padding: 4px 14px;
+      border-radius: 99px;
+      border: 0.5px solid var(--border);
+      background: var(--cream-main);
+      color: var(--brown-text);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
 
-.header-nav a {
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: 1.2px;
-  text-transform: uppercase;
-  color: var(--brown-muted);
-  padding: 20px 30px;
-  display: flex;
-  align-items: center;
-  border-left: 0.5px solid rgba(245, 239, 230, 0.12);
-  text-decoration: none;
-  transition: color 0.15s;
-}
+    .pill.active {
+      background: var(--brown-dark);
+      color: var(--cream);
+      border-color: var(--brown-dark);
+    }
 
-.header-nav a:hover {
-  color: var(--cream);
-  text-decoration: none;
-}
+    .pill:hover:not(.active) {
+      border-color: var(--brown-muted);
+      color: var(--brown-dark);
+    }
 
-.header-nav a.active {
-  background: var(--cream);
-  color: var(--brown-dark);
-}
+    .chart-section { margin-bottom: 2rem; }
 
-/* ===== Layout ===== */
-.page-layout {
-  display: flex;
-  max-width: 1100px;
-  margin: 0 auto;
-  min-height: calc(100vh - 58px);
-  border-left: 0.5px solid var(--border);
-  border-right: 0.5px solid var(--border);
-  background: var(--cream-main);
-}
+    .chart-wrap { position: relative; width: 100%; }
 
-/* #sidebar is the flex child; .sidebar is the injected partial inside it */
-#sidebar {
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-}
+    .legend-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 10px;
+    }
 
-/* ===== Sidebar ===== */
-.sidebar {
-  flex: 1;
-  width: 220px;
-  background: var(--cream-deep);
-  border-right: 0.5px solid var(--border);
-  padding: 28px 22px;
-}
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--brown-text);
+    }
 
-.sidebar-profile-image {
-  width: 100%;
-  aspect-ratio: 1;
-  object-fit: cover;
-  border-radius: 3px;
-  display: block;
-  margin-bottom: 22px;
-}
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
 
-.sidebar-section {
-  margin-top: 20px;
-}
+    .rating-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 1.5rem;
+      padding: 12px 14px;
+      background: var(--cream-deep);
+      border-radius: 4px;
+      border-left: 2px solid var(--accent);
+      align-items: center;
+    }
 
-.sidebar-section h3 {
-  font-family: 'DM Sans', system-ui, sans-serif;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--brown-dark);
-  margin: 0 0 8px 0;
-  letter-spacing: 0.1px;
-  border: none;
-}
+    .rating-legend-item {
+      font-size: 12px;
+      color: var(--brown-mid);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
 
-.sidebar-section a,
-.sidebar-section p {
-  display: block;
-  font-size: 12px;
-  font-weight: 300;
-  color: var(--brown-text);
-  margin-bottom: 5px;
-  line-height: 1.5;
-  text-decoration: none;
-}
+    .rating-star { color: var(--accent); font-size: 13px; }
+    .rating-sep { color: var(--border); font-size: 11px; }
 
-.sidebar-section a:hover {
-  color: var(--accent-dark);
-  text-decoration: underline;
-}
+    .movie-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 8px;
+    }
 
-.sidebar-section ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
+    .movie-card {
+      background: var(--cream-main);
+      border: 0.5px solid var(--border);
+      border-radius: 4px;
+      padding: 10px 12px;
+    }
 
-.sidebar-section ul li {
-  margin-bottom: 5px;
-}
+    .movie-title {
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--brown-dark);
+      margin-bottom: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
 
-.see-all-posts-link {
-  display: inline-block;
-  margin-top: 8px;
-  font-size: 11px;
-  font-weight: 400;
-  color: var(--accent) !important;
-  text-decoration: none;
-}
+    .movie-meta { font-size: 11px; color: var(--brown-muted); }
+    .movie-stars { color: var(--accent); font-size: 12px; margin-bottom: 3px; }
 
-.see-all-posts-link:hover {
-  text-decoration: underline;
-  color: var(--accent-dark) !important;
-}
+    .no-data {
+      font-size: 13px;
+      color: var(--brown-muted);
+      font-style: italic;
+      padding: 1rem 0;
+    }
+  </style>
+</head>
+<body>
 
-/* ===== Main Content ===== */
-.main-content {
-  flex: 1;
-  padding: 40px 48px;
-  background: var(--cream-main);
-  max-width: 880px;
-}
+  <!-- ===== HEADER ===== -->
+  <!-- Paste your existing header/nav partial here -->
 
-.name-title {
-  font-family: 'Cormorant Garamond', Georgia, serif;
-  font-size: 50px;
-  font-weight: 600;
-  color: var(--brown-dark);
-  letter-spacing: -0.5px;
-  line-height: 1.1;
-  margin: 0 0 -5px 0;
-}
+  <div class="page-layout">
 
-.main-content p {
-  font-size: 14.5px;
-  font-weight: 300;
-  line-height: 1.85;
-  color: var(--brown-dark);
-  margin-bottom: 1em;
-  max-width: 780px;
-}
+    <!-- ===== SIDEBAR ===== -->
+    <!-- Paste your existing sidebar partial here -->
 
-.main-content em {
-  font-family: 'Cormorant Garamond', Georgia, serif;
-  font-style: italic;
-  font-weight: 600;
-  font-size: 16px;
-  color: var(--accent-dark);
-}
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="main-content">
 
-.page-eyebrow {
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 1.3px;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin: 0 0 20px 0;
-}
+      <div class="dash">
+        <p class="page-eyebrow">My watchlist</p>
+        <h1 class="page-title">Movies &amp; TV dashboard</h1>
 
-/* ===== Page & Section Titles ===== */
-.page-title {
-  font-family: 'Cormorant Garamond', Georgia, serif;
-  font-size: 28px;
-  font-weight: 600;
-  color: var(--brown-dark);
-  border-bottom: 1px solid var(--border);
-  padding-bottom: 10px;
-  margin-bottom: 2rem;
-  letter-spacing: 0.2px;
-}
+        <!-- Rating legend -->
+        <div class="rating-legend">
+          <div class="rating-legend-item"><span class="rating-star">★</span> Bad</div>
+          <span class="rating-sep">·</span>
+          <div class="rating-legend-item"><span class="rating-star">★★</span> Ok</div>
+          <span class="rating-sep">·</span>
+          <div class="rating-legend-item"><span class="rating-star">★★★</span> Good</div>
+          <span class="rating-sep">·</span>
+          <div class="rating-legend-item"><span class="rating-star">★★★★</span> Great</div>
+          <span class="rating-sep">·</span>
+          <div class="rating-legend-item"><span class="rating-star">★★★★★</span> Amazing</div>
+        </div>
 
-.section-title {
-  font-family: 'Cormorant Garamond', Georgia, serif;
-  font-size: 22px;
-  font-weight: 600;
-  color: var(--brown-dark);
-  margin-top: 2.5rem;
-  margin-bottom: 1.25rem;
-  letter-spacing: 0.2px;
-}
+        <!-- Filters -->
+        <div class="filter-row">
+          <span class="filter-label">Type</span>
+          <button class="pill active" onclick="setType('all',this)">All</button>
+          <button class="pill" onclick="setType('Movie',this)">Movies</button>
+          <button class="pill" onclick="setType('TV Show',this)">TV shows</button>
+        </div>
+        <div class="filter-row" style="margin-bottom:1.75rem">
+          <span class="filter-label">Year</span>
+          <button class="pill active" onclick="setYear('all',this)">All time</button>
+          <button class="pill" onclick="setYear('2026',this)">2026</button>
+          <button class="pill" onclick="setYear('2025',this)">2025</button>
+        </div>
 
-.content-rule {
-  width: 28px;
-  height: 2px;
-  background: var(--accent);
-  margin: 28px 0;
-  border: none;
-}
+        <!-- Metric cards -->
+        <div class="metrics" id="metrics"></div>
 
-/* ===== Blog: Recent & All Posts ===== */
-#recent-posts {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
+        <hr class="content-rule">
 
-#recent-posts li {
-  margin-bottom: 6px;
-}
+        <!-- Ratings breakdown -->
+        <div class="chart-section">
+          <h2 class="section-title">Ratings breakdown</h2>
+          <div class="legend-row">
+            <div class="legend-item">
+              <span class="legend-dot" style="background:#8B4513"></span>Movies
+            </div>
+            <div class="legend-item">
+              <span class="legend-dot" style="background:#a08060"></span>TV shows
+            </div>
+          </div>
+          <div class="chart-wrap" id="barWrap">
+            <canvas id="barChart" role="img" aria-label="Bar chart of ratings 1 to 5 for movies and TV shows"></canvas>
+          </div>
+        </div>
 
-#recent-posts li a {
-  font-size: 12px;
-  font-weight: 300;
-  color: var(--brown-text);
-}
+        <!-- Rating over time -->
+        <div class="chart-section">
+          <h2 class="section-title">Rating over time</h2>
+          <div class="legend-row">
+            <div class="legend-item"><span class="legend-dot" style="background:#8B4513"></span>Movie</div>
+            <div class="legend-item"><span class="legend-dot" style="background:#a08060"></span>TV show</div>
+          </div>
+          <div class="chart-wrap" style="height:220px">
+            <canvas id="lineChart" role="img" aria-label="Line chart showing ratings of recently watched titles over time"></canvas>
+          </div>
+        </div>
 
-#all-posts-list,
-#recent-posts-main {
-  list-style: none;
-  padding: 0;
-  margin-top: 8px;
-}
+        <!-- Top rated grid -->
+        <div class="chart-section">
+          <h2 class="section-title" id="topTitle">Top rated</h2>
+          <div class="movie-grid" id="movieGrid"></div>
+        </div>
 
-#all-posts-list li {
-  padding: 12px 0;
-  border-bottom: 0.5px solid var(--border-light);
-  display: grid;
-  grid-template-columns: 2fr 90px 3fr;
-  gap: 16px;
-  align-items: start;
-}
+      </div><!-- /.dash -->
 
-#recent-posts-main li {
-  padding: 12px 0;
-  border-bottom: 0.5px solid var(--border-light);
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 16px;
-}
+    </main>
+  </div><!-- /.page-layout -->
 
-#all-posts-list a,
-#recent-posts-main a {
-  font-size: 14px;
-  font-weight: 400;
-  color: var(--brown-dark);
-  text-decoration: none;
-}
+  <!-- ===== FOOTER ===== -->
+  <!-- Paste your existing footer partial here -->
 
-#all-posts-list a:hover,
-#recent-posts-main a:hover {
-  color: var(--accent-dark);
-  text-decoration: underline;
-}
+  <script>
+    let RAW = [];
+    let activeType = 'all';
+    let activeYear = 'all';
 
-.post-date {
-  font-size: 11px;
-  color: var(--brown-muted);
-  font-weight: 300;
-  flex-shrink: 0;
-}
+    const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQMyFIHvgJkpT1uvZr_FQ2HZRE6ZWyyzRWQvUYlon5n_vkCJqr1HxhpIERYa6VFzzuxTGmgRRbfDroa/pub?gid=2011963051&single=true&output=csv";
 
-.post-description {
-  font-size: 12.5px;
-  font-weight: 300;
-  color: var(--brown-text);
-  margin-top: 3px;
-}
+    function parseCSV(text) {
+      const lines = text.trim().split('\n');
+      return lines.slice(1).map(row => {
+        const cols = row.match(/(".*?"|[^,]+)(?=,|$)/g) || [];
+        const c = cols.map(x => x.replace(/^"|"$/g, '').trim());
+        const rawDate = c[0] || '';
+        let watchYear = null;
+        const d = new Date(rawDate);
+        if (!isNaN(d) && d.getFullYear() > 2000) watchYear = String(d.getFullYear());
+        return {
+          title: c[1] || '',
+          year: parseInt(c[2]) || 0,
+          type: c[3] || 'Movie',
+          rating: parseInt(c[5]) || 0,
+          date: rawDate,
+          watchYear
+        };
+      }).filter(m => m.title && m.rating);
+    }
 
-.back-link {
-  display: inline-block;
-  margin-bottom: 1.5rem;
-  font-size: 11px;
-  font-weight: 400;
-  letter-spacing: 0.5px;
-  color: var(--accent);
-  text-decoration: none;
-}
+    function filtered() {
+      return RAW.filter(m => {
+        const typeOk = activeType === 'all' || m.type === activeType;
+        const yearOk = activeYear === 'all' || m.watchYear === activeYear;
+        return typeOk && yearOk;
+      });
+    }
 
-.back-link:hover {
-  text-decoration: underline;
-  color: var(--accent-dark);
-}
+    function setType(v, el) {
+      activeType = v;
+      el.closest('.filter-row').querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+      el.classList.add('active');
+      renderAll();
+    }
 
-/* ===== CV Styles ===== */
-.cv-section { margin-bottom: 2.5rem; }
+    function setYear(v, el) {
+      activeYear = v;
+      el.closest('.filter-row').querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+      el.classList.add('active');
+      renderAll();
+    }
 
-.cv-section h3 {
-  font-family: 'Cormorant Garamond', Georgia, serif;
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--brown-mid);
-  margin-bottom: 0.75rem;
-  padding-bottom: 6px;
-  border-bottom: 0.5px solid var(--border);
-}
+    function stars(n) { return '★'.repeat(n) + '☆'.repeat(5 - n); }
 
-.cv-entry { margin-bottom: 1.25rem; }
+    function renderMetrics() {
+      const data = filtered();
+      if (!data.length) {
+        document.getElementById('metrics').innerHTML = '<p class="no-data">No entries for this filter.</p>';
+        return;
+      }
+      const avg = data.reduce((s, m) => s + m.rating, 0) / data.length;
+      const five = data.filter(m => m.rating === 5).length;
+      const one = data.filter(m => m.rating === 1).length;
+      document.getElementById('metrics').innerHTML = `
+        <div class="metric">
+          <div class="metric-label">Watched</div>
+          <div class="metric-value">${data.length}</div>
+          <div class="metric-sub">titles</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Avg rating</div>
+          <div class="metric-value">${avg.toFixed(1)}</div>
+          <div class="metric-sub">out of 5</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Amazing (★★★★★)</div>
+          <div class="metric-value">${five}</div>
+          <div class="metric-sub">${Math.round(five / data.length * 100)}% of total</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Bad (★)</div>
+          <div class="metric-value">${one}</div>
+          <div class="metric-sub">not for me</div>
+        </div>
+      `;
+    }
 
-.cv-entry h4 {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--brown-dark);
-  margin-bottom: 0;
-}
+    let barInstance = null;
+    function renderBar() {
+      const data = filtered();
+      const movies = data.filter(m => m.type === 'Movie');
+      const shows = data.filter(m => m.type === 'TV Show');
+      const counts = arr => [1, 2, 3, 4, 5].map(r => arr.filter(m => m.rating === r).length);
+      const wrap = document.getElementById('barWrap');
+      wrap.style.height = Math.max(200, (activeType === 'all' ? 10 : 5) * 34 + 60) + 'px';
+      if (barInstance) barInstance.destroy();
+      const datasets = activeType === 'all'
+        ? [
+            { label: 'Movies', data: counts(movies), backgroundColor: '#8B4513', borderRadius: 3 },
+            { label: 'TV shows', data: counts(shows), backgroundColor: '#a08060', borderRadius: 3 }
+          ]
+        : [{
+            label: activeType === 'Movie' ? 'Movies' : 'TV shows',
+            data: counts(data),
+            backgroundColor: activeType === 'Movie' ? '#8B4513' : '#a08060',
+            borderRadius: 3
+          }];
+      barInstance = new Chart(document.getElementById('barChart'), {
+        type: 'bar',
+        data: {
+          labels: ['★ Bad', '★★ Ok', '★★★ Good', '★★★★ Great', '★★★★★ Amazing'],
+          datasets
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { grid: { display: false }, ticks: { color: '#a08060', font: { size: 11 } } },
+            y: { ticks: { stepSize: 1, color: '#a08060', precision: 0 }, grid: { color: 'rgba(165,128,96,0.15)' } }
+          }
+        }
+      });
+    }
 
-.cv-entry p {
-  margin-top: 2px;
-  font-size: 13px;
-  font-weight: 300;
-  font-style: italic;
-  color: var(--brown-text);
-}
+    let lineInstance = null;
+    function renderLine() {
+      const timed = RAW
+        .filter(m => m.watchYear && parseInt(m.watchYear) > 2000)
+        .filter(m => activeYear === 'all' || m.watchYear === activeYear)
+        .filter(m => activeType === 'all' || m.type === activeType)
+        .sort((a, b) => a.date.localeCompare(b.date));
+      if (lineInstance) lineInstance.destroy();
+      if (!timed.length) return;
+      const labels = timed.map(m => {
+        const d = new Date(m.date);
+        return d.toLocaleDateString('en-CA', { month: 'short', day: 'numeric' });
+      });
+      lineInstance = new Chart(document.getElementById('lineChart'), {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [{
+            label: 'Rating',
+            data: timed.map(m => m.rating),
+            borderColor: '#C67C3E',
+            backgroundColor: 'rgba(198,124,62,0.07)',
+            pointBackgroundColor: timed.map(m => m.type === 'Movie' ? '#8B4513' : '#a08060'),
+            pointRadius: 5,
+            tension: 0.3,
+            fill: true
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: { callbacks: { title: items => timed[items[0].dataIndex].title } }
+          },
+          scales: {
+            x: { ticks: { color: '#a08060', maxRotation: 45, autoSkip: false, font: { size: 10 } }, grid: { display: false } },
+            y: { min: 0, max: 5, ticks: { stepSize: 1, color: '#a08060' }, grid: { color: 'rgba(165,128,96,0.15)' } }
+          }
+        }
+      });
+    }
 
-.cv-entry ul {
-  margin-top: 8px;
-  padding-left: 18px;
-  font-size: 13px;
-  font-weight: 300;
-  color: var(--brown-dark);
-}
+    function renderGrid() {
+      const data = filtered().filter(m => m.rating >= 4).sort((a, b) => b.rating - a.rating || a.title.localeCompare(b.title));
+      document.getElementById('topTitle').textContent = `Top rated (${data.length})`;
+      document.getElementById('movieGrid').innerHTML = data.length
+        ? data.map(m => `
+          <div class="movie-card">
+            <div class="movie-stars">${stars(m.rating)}</div>
+            <div class="movie-title" title="${m.title}">${m.title}</div>
+            <div class="movie-meta">${m.year} · ${m.type}</div>
+          </div>`).join('')
+        : '<p class="no-data">No top-rated titles for this filter.</p>';
+    }
 
-/* ===== Blog post content ===== */
-.main-content h2,
-.main-content h3 {
-  font-family: 'Cormorant Garamond', Georgia, serif;
-  font-weight: 600;
-  color: var(--brown-dark);
-  margin-top: 2rem;
-  margin-bottom: 0.75rem;
-}
-.main-content h2 { font-size: 28px; }
-.main-content h3 { font-size: 22px; }
+    function renderAll() { renderMetrics(); renderBar(); renderLine(); renderGrid(); }
 
-.main-content blockquote {
-  border-left: 2px solid var(--accent);
-  padding-left: 1.25rem;
-  margin: 1.5rem 0;
-  color: var(--brown-text);
-  font-style: italic;
-}
+    fetch(SHEET_URL)
+      .then(r => r.text())
+      .then(text => { RAW = parseCSV(text); renderAll(); })
+      .catch(() => {
+        document.getElementById('metrics').innerHTML = '<p class="no-data">Could not load sheet data. Check the published URL.</p>';
+      });
+  </script>
 
-.main-content code {
-  font-family: 'IBM Plex Mono', 'Courier New', monospace;
-  font-size: 13px;
-  background: var(--cream-deep);
-  padding: 1px 5px;
-  border-radius: 2px;
-  color: var(--brown-dark);
-}
-
-.main-content pre {
-  background: var(--cream-deep);
-  border: 0.5px solid var(--border);
-  border-radius: 4px;
-  padding: 1rem 1.25rem;
-  overflow-x: auto;
-  margin: 1.5rem 0;
-}
-
-.main-content pre code {
-  background: none;
-  padding: 0;
-}
-
-/* ===== Responsive ===== */
-@media (max-width: 768px) {
-  .page-layout {
-    flex-direction: column;
-    border-left: none;
-    border-right: none;
-  }
-
-  .sidebar {
-    width: 100%;
-    border-right: none;
-    border-bottom: 0.5px solid var(--border);
-    padding: 24px 20px;
-  }
-
-  .main-content {
-    padding: 28px 20px;
-  }
-
-  .header {
-    padding: 0 20px;
-  }
-
-  .header-nav a {
-    padding: 0 14px;
-    font-size: 11px;
-  }
-}
-
-
+</body>
+</html>
