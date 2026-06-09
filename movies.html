@@ -477,7 +477,13 @@
     
       const data = filtered()
         .filter(m => m.rating >= 4)
-        .sort((a, b) => b.rating - a.rating || a.title.localeCompare(b.title));
+        .sort((a, b) => {
+          if (b.rating !== a.rating) return b.rating - a.rating;
+          const aDate = a.watchYear ? a.date : '';
+          const bDate = b.watchYear ? b.date : '';
+          if (bDate !== aDate) return bDate.localeCompare(aDate);
+          return a.title.localeCompare(b.title);
+        })
     
       document.getElementById('topTitle').textContent = `Top rated (${data.length})`;
     
