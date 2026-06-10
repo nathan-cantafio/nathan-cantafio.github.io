@@ -178,6 +178,67 @@
       font-style: italic;
       padding: 1rem 0;
     }
+
+    /* ===== Logbook-specific controls ===== */
+    .logbook-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 1rem;
+    }
+
+    .search-wrap {
+      position: relative;
+      max-width: 280px;
+    }
+
+    .search-wrap svg {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: var(--brown-muted);
+    }
+
+    #logbookSearch {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      width: 100%;
+      padding: 5px 10px 5px 30px;
+      border-radius: 99px;
+      border: 0.5px solid var(--border);
+      background: var(--cream-main);
+      color: var(--brown-dark);
+      outline: none;
+      box-sizing: border-box;
+      transition: border-color 0.15s;
+    }
+
+    #logbookSearch::placeholder {
+      color: var(--brown-muted);
+    }
+
+    #logbookSearch:focus {
+      border-color: var(--brown-muted);
+    }
+
+    .clear-search {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--brown-muted);
+      font-size: 14px;
+      line-height: 1;
+      padding: 0;
+      display: none;
+    }
+
+    .clear-search:hover { color: var(--brown-dark); }
   </style>
 
   <script src="/load-header.js" defer></script>
@@ -249,9 +310,32 @@
           <div class="movie-grid" id="movieGrid"></div>
         </div>
 
-        <!-- Recently watched list -->
+        <!-- Logbook -->
         <div class="chart-section">
-          <h2 class="section-title" id="recentTitle">Recently watched</h2>
+          <h2 class="section-title" id="recentTitle">Logbook</h2>
+
+          <div class="logbook-controls">
+            <!-- Search -->
+            <div class="search-wrap">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+              <input id="logbookSearch" type="search" placeholder="Search titles…" oninput="onSearchInput(this.value)" />
+              <button class="clear-search" id="clearSearch" onclick="clearSearch()" aria-label="Clear search">✕</button>
+            </div>
+
+            <!-- Rating filter -->
+            <div class="filter-row" style="margin-bottom:0">
+              <span class="filter-label">Rating</span>
+              <button class="pill active" onclick="setLogbookRating('all', this)">All</button>
+              <button class="pill" onclick="setLogbookRating(1, this)">★</button>
+              <button class="pill" onclick="setLogbookRating(2, this)">★★</button>
+              <button class="pill" onclick="setLogbookRating(3, this)">★★★</button>
+              <button class="pill" onclick="setLogbookRating(4, this)">★★★★</button>
+              <button class="pill" onclick="setLogbookRating(5, this)">★★★★★</button>
+            </div>
+          </div>
+
           <div id="recentList"></div>
         </div>
 
@@ -267,6 +351,8 @@
     let RAW = [];
     let activeType = 'all';
     let activeYear = 'all';
+    let activeLogbookRating = 'all';
+    let logbookSearchQuery = '';
 
     const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQMyFIHvgJkpT1uvZr_FQ2HZRE6ZWyyzRWQvUYlon5n_vkCJqr1HxhpIERYa6VFzzuxTGmgRRbfDroa/pub?gid=2011963051&single=true&output=csv";
 
@@ -299,11 +385,22 @@
       return [...seen.values()];
     }
 
+    // Base filtered set (type + year — used for metrics, chart, top rated)
     function filtered() {
       return RAW.filter(m => {
         const typeOk = activeType === 'all' || m.type === activeType;
         const yearOk = activeYear === 'all' || m.watchYear === activeYear;
         return typeOk && yearOk;
+      });
+    }
+
+    // Logbook filtered set (type + year + rating + search)
+    function filteredLogbook() {
+      const q = logbookSearchQuery.toLowerCase();
+      return filtered().filter(m => {
+        const ratingOk = activeLogbookRating === 'all' || m.rating === activeLogbookRating;
+        const searchOk = !q || m.title.toLowerCase().includes(q);
+        return ratingOk && searchOk;
       });
     }
 
@@ -338,6 +435,26 @@
       el.closest('.filter-row').querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
       el.classList.add('active');
       renderAll();
+    }
+
+    function setLogbookRating(v, el) {
+      activeLogbookRating = v;
+      el.closest('.filter-row').querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+      el.classList.add('active');
+      renderRecentList();
+    }
+
+    function onSearchInput(val) {
+      logbookSearchQuery = val;
+      document.getElementById('clearSearch').style.display = val ? 'block' : 'none';
+      renderRecentList();
+    }
+
+    function clearSearch() {
+      logbookSearchQuery = '';
+      document.getElementById('logbookSearch').value = '';
+      document.getElementById('clearSearch').style.display = 'none';
+      renderRecentList();
     }
 
     function stars(n) { return '★'.repeat(n) + '☆'.repeat(5 - n); }
@@ -417,22 +534,22 @@
     
     function renderRecentList(resetCount = true) {
       if (resetCount) recentShown = 10;
+
+      const data = filteredLogbook();
+
+      const dated = data.filter(m => m.watchYear).sort((a, b) => b.date.localeCompare(a.date));
+      const undated = data.filter(m => !m.watchYear);
+      const sorted = [...dated, ...undated];
     
-      const dated = filtered()
-        .filter(m => m.watchYear)
-        .sort((a, b) => b.date.localeCompare(a.date));
-      const undated = filtered().filter(m => !m.watchYear);
-      const data = [...dated, ...undated];
+      document.getElementById('recentTitle').textContent = `Logbook (${sorted.length})`;
     
-      document.getElementById('recentTitle').textContent = `Recently watched (${data.length})`;
-    
-      if (!data.length) {
-        document.getElementById('recentList').innerHTML = '<p class="no-data">No entries for this filter.</p>';
+      if (!sorted.length) {
+        document.getElementById('recentList').innerHTML = '<p class="no-data">No entries match this filter.</p>';
         return;
       }
     
-      const visible = data.slice(0, recentShown);
-      const remaining = data.length - recentShown;
+      const visible = sorted.slice(0, recentShown);
+      const remaining = sorted.length - recentShown;
     
       document.getElementById('recentList').innerHTML = `
         <table style="width:100%; border-collapse:collapse; font-size:13px;">
