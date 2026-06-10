@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Movies & TV — Watchlist</title>
+  <title>Movies & TV — Nathan Cantafio</title>
   <link rel="stylesheet" href="style.css">
   <!-- Chart.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
@@ -257,7 +257,7 @@
     <main class="main-content">
 
       <div class="dash">
-        <p class="page-eyebrow">Movies &amp; TV dashboard</p>
+        <p class="page-eyebrow">Movies &amp; TV</p>
 
         <!-- Rating legend -->
         <div class="rating-legend">
@@ -315,13 +315,17 @@
           <h2 class="section-title" id="recentTitle">Logbook</h2>
 
           <div class="logbook-controls">
-            <!-- Search -->
-            <div class="search-wrap">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-              </svg>
-              <input id="logbookSearch" type="search" placeholder="Search titles…" oninput="onSearchInput(this.value)" />
-              <button class="clear-search" id="clearSearch" onclick="clearSearch()" aria-label="Clear search">✕</button>
+            <!-- Type filter -->
+            <div class="filter-row" style="margin-bottom:0">
+              <span class="filter-label">Type</span>
+              <button class="pill active" onclick="setLbType('all', this)">All</button>
+              <button class="pill" onclick="setLbType('Movie', this)">Movies</button>
+              <button class="pill" onclick="setLbType('TV Show', this)">TV shows</button>
+            </div>
+
+            <!-- Year filter (populated by JS) -->
+            <div class="filter-row" style="margin-bottom:0" id="lbYearFilter">
+              <span class="filter-label">Year</span>
             </div>
 
             <!-- Rating filter -->
@@ -333,6 +337,15 @@
               <button class="pill" onclick="setLogbookRating(3, this)">★★★</button>
               <button class="pill" onclick="setLogbookRating(4, this)">★★★★</button>
               <button class="pill" onclick="setLogbookRating(5, this)">★★★★★</button>
+            </div>
+
+            <!-- Search -->
+            <div class="search-wrap">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+              <input id="logbookSearch" type="search" placeholder="Search titles…" oninput="onSearchInput(this.value)" />
+              <button class="clear-search" id="clearSearch" onclick="clearSearch()" aria-label="Clear search">✕</button>
             </div>
           </div>
 
@@ -349,14 +362,17 @@
 
   <script>
     let RAW = [];
+
+    // Dashboard filters (metrics + chart + top rated)
     let activeType = 'all';
     let activeYear = 'all';
-    let activeLogbookRating = 'all';
-    let logbookSearchQuery = '';
+
+    // Logbook filters (fully independent)
+    let lb = { type: 'all', year: 'all', rating: 'all', search: '' };
 
     const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQMyFIHvgJkpT1uvZr_FQ2HZRE6ZWyyzRWQvUYlon5n_vkCJqr1HxhpIERYa6VFzzuxTGmgRRbfDroa/pub?gid=2011963051&single=true&output=csv";
 
-	function parseCSV(text) {
+    function parseCSV(text) {
       const lines = text.trim().split('\n');
       const entries = lines.slice(1).map(row => {
         const cols = row.match(/(".*?"|[^,]+)(?=,|$)/g) || [];
@@ -374,18 +390,16 @@
           watchYear
         };
       }).filter(m => m.title && m.rating);
-    
+
       const seen = new Map();
       entries.forEach(m => {
         const key = m.title.toLowerCase() + '|' + m.year;
-        if (!seen.has(key) || m.date > seen.get(key).date) {
-          seen.set(key, m);
-        }
+        if (!seen.has(key) || m.date > seen.get(key).date) seen.set(key, m);
       });
       return [...seen.values()];
     }
 
-    // Base filtered set (type + year — used for metrics, chart, top rated)
+    // Dashboard filter (metrics, chart, top rated)
     function filtered() {
       return RAW.filter(m => {
         const typeOk = activeType === 'all' || m.type === activeType;
@@ -394,64 +408,90 @@
       });
     }
 
-    // Logbook filtered set (type + year + rating + search)
+    // Logbook filter (completely independent)
     function filteredLogbook() {
-      const q = logbookSearchQuery.toLowerCase();
-      return filtered().filter(m => {
-        const ratingOk = activeLogbookRating === 'all' || m.rating === activeLogbookRating;
+      const q = lb.search.toLowerCase();
+      return RAW.filter(m => {
+        const typeOk  = lb.type   === 'all' || m.type === lb.type;
+        const yearOk  = lb.year   === 'all' || m.watchYear === lb.year;
+        const rateOk  = lb.rating === 'all' || m.rating === lb.rating;
         const searchOk = !q || m.title.toLowerCase().includes(q);
-        return ratingOk && searchOk;
+        return typeOk && yearOk && rateOk && searchOk;
       });
     }
 
+    // Build year pill rows for both dashboard and logbook
     function renderYearPills() {
-      const years = [...new Set(RAW.map(m => m.watchYear).filter(Boolean))]
-        .sort((a, b) => b - a);
-      const row = document.getElementById('yearFilter');
-      row.innerHTML = '<span class="filter-label">Year</span>';
-      const allBtn = document.createElement('button');
-      allBtn.className = 'pill active';
-      allBtn.textContent = 'All time';
-      allBtn.onclick = function() { setYear('all', this); };
-      row.appendChild(allBtn);
-      years.forEach(y => {
+      const years = [...new Set(RAW.map(m => m.watchYear).filter(Boolean))].sort((a, b) => b - a);
+
+      // Dashboard year row
+      const dashRow = document.getElementById('yearFilter');
+      dashRow.innerHTML = '<span class="filter-label">Year</span>';
+      [['All time', 'all'], ...years.map(y => [y, y])].forEach(([label, val], i) => {
         const btn = document.createElement('button');
-        btn.className = 'pill';
-        btn.textContent = y;
-        btn.onclick = function() { setYear(y, this); };
-        row.appendChild(btn);
+        btn.className = 'pill' + (i === 0 ? ' active' : '');
+        btn.textContent = label;
+        btn.onclick = function() { setYear(val, this); };
+        dashRow.appendChild(btn);
+      });
+
+      // Logbook year row
+      const lbRow = document.getElementById('lbYearFilter');
+      lbRow.innerHTML = '<span class="filter-label">Year</span>';
+      [['All time', 'all'], ...years.map(y => [y, y])].forEach(([label, val], i) => {
+        const btn = document.createElement('button');
+        btn.className = 'pill' + (i === 0 ? ' active' : '');
+        btn.textContent = label;
+        btn.onclick = function() { setLbYear(val, this); };
+        lbRow.appendChild(btn);
       });
     }
 
+    // ── Dashboard filter setters ──
     function setType(v, el) {
       activeType = v;
       el.closest('.filter-row').querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
       el.classList.add('active');
-      renderAll();
+      renderDash();
     }
 
     function setYear(v, el) {
       activeYear = v;
       el.closest('.filter-row').querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
       el.classList.add('active');
-      renderAll();
+      renderDash();
+    }
+
+    // ── Logbook filter setters ──
+    function setLbType(v, el) {
+      lb.type = v;
+      el.closest('.filter-row').querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+      el.classList.add('active');
+      renderRecentList();
+    }
+
+    function setLbYear(v, el) {
+      lb.year = v;
+      el.closest('.filter-row').querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+      el.classList.add('active');
+      renderRecentList();
     }
 
     function setLogbookRating(v, el) {
-      activeLogbookRating = v;
+      lb.rating = v;
       el.closest('.filter-row').querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
       el.classList.add('active');
       renderRecentList();
     }
 
     function onSearchInput(val) {
-      logbookSearchQuery = val;
+      lb.search = val;
       document.getElementById('clearSearch').style.display = val ? 'block' : 'none';
       renderRecentList();
     }
 
     function clearSearch() {
-      logbookSearchQuery = '';
+      lb.search = '';
       document.getElementById('logbookSearch').value = '';
       document.getElementById('clearSearch').style.display = 'none';
       renderRecentList();
@@ -638,7 +678,8 @@
       renderGrid(false);
     }
 
-    function renderAll() { renderMetrics(); renderBar(); renderRecentList(); renderGrid(); }
+    function renderDash() { renderMetrics(); renderBar(); renderGrid(); }
+    function renderAll() { renderDash(); renderRecentList(); }
 
     fetch(SHEET_URL)
       .then(r => r.text())
