@@ -8,7 +8,6 @@ document.addEventListener("DOMContentLoaded", () => {
             let activePage = "home";
             if (path.includes("all-posts") || path.includes("/blog/")) activePage = "blog";
             else if (path.includes("notes")) activePage = "notes";
-            else if (path.includes("movies")) activePage = "movies";
 
             document.querySelectorAll(".header-nav a[data-page]").forEach(link => {
                 if (link.dataset.page === activePage) link.classList.add("active");
