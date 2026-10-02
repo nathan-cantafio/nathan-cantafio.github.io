@@ -15,6 +15,6 @@
     	"title": "On Experimental Design",
     	"date": "2026-05-04",
     	"file": "on-experimental-design.md",
-    	"description": "A rigorous treatment of experimental design, showing how support, orthogonality, and balance determine identifiability, variance, and what OLS actually estimates."
+    	"description": "What does experimental design buy you? If the model is correct, only precision. If it is misspecified, design decides what OLS estimates."
    }    
 ]
