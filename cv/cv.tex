@@ -26,7 +26,7 @@
 
 % Section formatting
 \titleformat{\section}{\Large\scshape\raggedright}{}{0em}{}[\titlerule]
-\titlespacing{\section}{0pt}{12pt}{8pt}
+\titlespacing{\section}{0pt}{8pt}{4pt}
 
 % Link colors
 \definecolor{linkcolour}{rgb}{0,0.2,0.6}
@@ -53,6 +53,7 @@
 %    BEGIN DOCUMENT
 %----------------------------------------------------------------------------------------
 \begin{document}
+\enlargethispage{2\baselineskip}
 \pagestyle{empty} 
 
 %----------------------------------------------------------------------------------------
@@ -79,26 +80,29 @@
 %----------------------------------------------------------------------------------------
 \section{Skills}
 \begin{tabularx}{\linewidth}{@{}l X@{}}
-\textbf{Programming} & Python (PyTorch, GPyTorch, NumPy), R (Tidyverse, ggplot2)\\
-\textbf{Tools \& Software} & \LaTeX, Git, GitHub, Linux/Unix Shell (HPC), Weights and Biases, Microsoft Office \\
+\textbf{Statistical Methods} & Regression \& GLMs, mixed-effects models, experimental design, Bayesian methods \\
+\textbf{Software} & R (tidyverse, ggplot2), Python, Git/GitHub, \LaTeX, Excel \\
 \end{tabularx}
-
 %----------------------------------------------------------------------------------------
 %    EXPERIENCE
 %----------------------------------------------------------------------------------------
-\section{Work Experience}
+\section{Experience}
 
 \jobheader{Co-op Student}{May 2026 -- Dec 2026}{Health Canada}
 \begin{jobitems}
-	\item Collaborated with a team of statisticians and field experts to provide statistical analysis of public health data.	
+    \item Implemented a pre-specified statistical analysis plan for a public health project, working with a team of statisticians and subject-matter experts.
+    \item Wrote methods documentation that holds up to statistical review while remaining clear to non-statisticians.
+    \item Preparing results for planned presentation at the Health Canada Science Forum.
 \end{jobitems}
 
-\jobheader{Junior Statistical Consultant}{Mar 2026 -- Present}{Applied Statistics and Data Science Group (ASDA)}
+\jobheader{Junior Statistical Consultant}{Mar 2026 -- Present}{Applied Statistics and Data Science Group (ASDA), UBC}
 \begin{jobitems}
-    \item Worked with researchers across disciplines to provide advice on experimental design and statistical analysis.
+    \item Consulted with researchers across disciplines, turning their research goals into well-defined statistical questions and recommending appropriate study designs and analyses.
+    \item Carried out analyses in R for client projects, including regression modelling and data visualization.
+    \item Wrote reports that set out recommended methods, their assumptions, and their limitations in plain language.
 \end{jobitems}
 
-\jobheader{Graduate Teaching Assistant}{Sep 2025 -- Present}{UBC Department of Statistics (STAT 305, STAT 302)}
+\jobheader{Graduate Teaching Assistant}{Sep 2025 -- Present}{UBC Department of Statistics (STAT 305 Statistical Inference, STAT 302 Introduction to Probability)}
 \begin{jobitems}
     \item Held office hours, led weekly labs, and contributed to exam development across undergraduate courses.
 \end{jobitems}
@@ -108,14 +112,9 @@
     \item Provided academic guidance and professional development support to undergraduate students.
 \end{jobitems}
 
-\jobheader{Undergraduate Summer Research Assistant}{May 2025 -- Aug 2025}{UBC Department of Statistics, supervised by Prof. Geoff Pleiss}
+\jobheader{Undergraduate Summer Research Assistant (NSERC USRA)}{May 2025 -- Aug 2025}{UBC Department of Statistics, supervised by Prof. Geoff Pleiss}
 \begin{jobitems}
-    \item Studied Gaussian processes and Bayesian Optimization using Python on Compute Canada HPC clusters.
-\end{jobitems}
-
-\jobheader{External Support Specialist Co-op}{Sep 2023 -- Aug 2024}{Chartered Professional Accountants of British Columbia}
-\begin{jobitems}
-    \item Provided technical support to stakeholders and authored an internal troubleshooting wiki.
+    \item Studied Gaussian processes and Bayesian optimization using Python on Compute Canada HPC clusters.
 \end{jobitems}
 
 %----------------------------------------------------------------------------------------
@@ -123,17 +122,18 @@
 %----------------------------------------------------------------------------------------
 \section{Projects}
 
-\jobheader{Pok\'emon Team Building Optimization}{\href{https://github.com/nathan-cantafio/pokemon}{Link to Repo}}{STAT 535C Class Project}
+\jobheader{Statistics Blog}{\href{https://nathancantafio.com/}{nathancantafio.com}}{Personal Project}
 \begin{jobitems}
-    \item Applied black-box optimization techniques to discover strong Pok\'emon teams.
+    \item Write long-form posts that examine the assumptions behind common statistical methods.
+    \item Publish typeset notes on measure theory, functional analysis, probability theory, and other topics.
 \end{jobitems}
 
-\jobheader{Pandemic Simulation Experiment}{\href{https://github.com/nathan-cantafio/pandemic-simulation}{Link to Repo}}{STAT 404 Class Project}
+\jobheader{Pandemic Simulation Experiment}{\href{https://github.com/nathan-cantafio/pandemic-simulation}{github.com/nathan-cantafio/pandemic-simulation}}{STAT 404 Class Project}
 \begin{jobitems}
     \item Designed a simulation experiment to assess policy effectiveness in preventing disease spread.
 \end{jobitems}
 
-\jobheader{Mortgage vs. Rent Simulation}{\href{https://github.com/nathan-cantafio/mortgages}{Link to Repo}}{Personal Project}
+\jobheader{Mortgage vs. Rent Simulation}{\href{https://github.com/nathan-cantafio/mortgages}{github.com/nathan-cantafio/mortgages}}{Personal Project}
 \begin{jobitems}
     \item Estimated long-term housing costs using Monte Carlo simulations and Vasicek/CIR interest rate models.
 \end{jobitems}
