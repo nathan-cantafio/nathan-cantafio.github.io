@@ -24,7 +24,7 @@ Under "regularity conditions," the MLE converges in probability to the true $\th
 
 With these, and assuming the model contains the truth, the MLE is consistent. With more assumptions it is asymptotically normal, which gives the usual confidence intervals and tests.
 
-Courses usually present this backwards: motivate MLE with "most likely data," then add the regularity conditions as a technical footnote. But "most likely data" is not a justification for continuous models, since density values are not probabilities. The asymptotic theory is where the justification lives. The intuition is a mnemonic for what MLE *does*. It is not a reason to believe MLE *works*.
+Courses usually present this backwards: motivate MLE with "most likely data," then add the regularity conditions as a technical footnote. Perhaps this is good pedagogy, but "most likely data" is not a justification for continuous models, since density values are not probabilities. The asymptotic theory is where the justification lives. And I fear that we are training future statisticians to operate on "vibes".
 
 ### When the conditions fail: Gaussian mixtures
 

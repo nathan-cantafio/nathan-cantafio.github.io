@@ -13,7 +13,7 @@ It depends on whether the model is right.
 - **Well-specified model:** design affects *identifiability* and *variance*. It never affects what you are estimating.
 - **Misspecified model:** design determines *what you are estimating*.
 
-I used to think misspecification was mostly harmless. If the truth is nonlinear, I figured, a linear fit is at least a first-order Taylor approximation, so the slope is roughly the derivative. It isn't. The slope is a design-dependent average, and a different design gives a different answer. Section 2 shows this with a cubic.
+I used to think misspecification was mostly harmless. If the truth is nonlinear, I figured, a linear fit is at least a first-order Taylor approximation, so the slope is roughly the derivative. In fact, the slope is a design-dependent average, and a different design gives a different answer. Section 2 shows this with a cubic.
 
 ### Setup
 
@@ -89,7 +89,7 @@ To compare two level means with $n_1 + n_2 = n$ observations, the contrast varia
 
 $$\frac{1}{n_1} + \frac{1}{n_2} \ge \frac{4}{n},$$
 
-with equality if and only if $n_1 = n_2$. An imbalanced design is still unbiased, but its tests have less power. With more than two levels, balance minimizes the *average* pairwise variance. A single pair is best served by putting all the replicates on it.
+with equality if and only if $n_1 = n_2$. An imbalanced design is still unbiased, but its tests have less power. With more than two levels, balance minimizes the *average* pairwise variance.
 
 **Summary.** When the model is right, support decides whether you can estimate a parameter, and orthogonality and balance decide how well. Design never changes the target.
 
@@ -163,7 +163,7 @@ Under correct specification, imbalance only costs power. Under misspecification,
 | **Support** | Identifiability | Where $g$ is probed; unvisited cells alias with included terms |
 | **Orthogonality** | Independent estimates, minimum variance | Omitted orthogonal terms cannot bias the estimand |
 | **Balance** | Power | Sets the weights in the projection, hence the estimand |
-| **Replication** | Lower variance | Lower variance only; the target does not move |
+| **Replication** | Lower variance | Lower variance only |
 
 A design is a choice about what to measure. Before asking how precisely an experiment answers a question, ask which question it answers. Coverage of the region you care about usually matters more than efficiency in a narrow one.
 
