@@ -4,79 +4,101 @@ date: 2025-12-13
 description: The justification for using MLE estimates seems fairly intuitive, but this post makes an argument for why it isn't.
 ---
 
-Maximum likelihood estimation (MLE) feels natural. It isn't, and the reason it works is not the reason it feels natural.
+When I was first introduced to maximum likelihood estimation (MLE), it felt like a very natural idea. Later I learned the rigorous justification, and it felt like a completely different idea. I've come to think that students are usually given two explanations of why MLE works: one that is easy to understand but wrong, and one that is correct but opaque. This post is my attempt at something in between.
 
-You have independent data $x_1, \dots, x_n$ from a family of distributions with density $f(x|\theta)$ and unknown $\theta$. The **likelihood** is
+Here is the setup. You have independent data $x_1, \dots, x_n$ that you believe came from a family of distributions with density $f(x|\theta)$, for some unknown $\theta$. For example, the data might be normal, with $\theta = (\mu, \sigma^2)$. The **likelihood function** is the joint density of the data, viewed as a function of $\theta$:
 
 $$L_n(\theta) = \prod_{i=1}^n f(x_i|\theta),$$
 
-and the MLE is $\hat\theta = \arg\max_{\theta \in \Theta} L_n(\theta)$. The story is: pick the parameters under which the data were most likely.
+and the MLE is
 
-That story quietly treats likelihood as probability. For continuous models it isn't. It is a product of density values, and densities can be arbitrarily large. A normal density at its mean blows up as the variance shrinks. So why doesn't MLE chase degenerate parameters to drive the likelihood to infinity? Usually it doesn't. The question is why.
+$$\hat\theta = \arg\max_{\theta \in \Theta} L_n(\theta).$$
 
-### The real justification: regularity conditions
+The understandable explanation is: choose the parameters under which the observed data were most likely. If you quietly read "likelihood" as "probability," this sounds completely reasonable.
 
-Under "regularity conditions," the MLE converges in probability to the true $\theta^\*$ as $n \to \infty$. The typical conditions:
+But for continuous models, likelihood is not a probability. It is a product of density values, and unlike probabilities, densities can be arbitrarily large. A normal density evaluated at its mean blows up as the variance shrinks to zero. So why doesn't MLE just chase degenerate parameters, like a variance of zero, to drive the likelihood to infinity? In practice it usually doesn't, and it usually gives sensible answers. So what is really going on?
 
-1. **Identifiability:** different parameters give different distributions.
+### The usual explanation: regularity conditions
+
+The principled justification for MLE is consistency. Under a set of "regularity conditions," the MLE converges in probability to the true parameter $\theta^\*$ as $n \to \infty$. Typical conditions are:
+
+1. **Identifiability:** different parameter values give genuinely different distributions.
 2. **A well-separated maximum:** parameters far from $\theta^\*$ have meaningfully smaller expected log-likelihood.
-3. **A uniform law of large numbers** for the log-likelihood: random fluctuations don't create spurious peaks.
+3. **A uniform law of large numbers for the log-likelihood:** random fluctuations in the data don't create spurious likelihood peaks in the long run.
 
-With these, and assuming the model contains the truth, the MLE is consistent. With more assumptions it is asymptotically normal, which gives the usual confidence intervals and tests.
+Under these conditions, and assuming the model contains the true distribution, the MLE is consistent. With a few more assumptions it is also asymptotically normal, which is where the standard confidence intervals and tests come from.
 
-Courses usually present this backwards: motivate MLE with "most likely data," then add the regularity conditions as a technical footnote. Perhaps this is good pedagogy, but "most likely data" is not a justification for continuous models, since density values are not probabilities. The asymptotic theory is where the justification lives. And I fear that we are training future statisticians to operate on "vibes".
+I want to be clear that this is a genuinely good justification. Consistency is not a trivial property, and it means MLE is more than a heuristic.
+
+But look at it from a student's point of view. "A uniform law of large numbers for the log-likelihood" is not something you can picture. The conditions tell you when the theorem holds, but they don't tell you much about what they are ruling out, or why that thing shouldn't happen in practice. So the student ends up with two explanations: an intuitive one that is wrong for continuous models, and a rigorous one that is correct but hard to see through. Unsurprisingly, it's the intuitive one that sticks. And I fear that we are training future statisticians to operate on "vibes".
+
+What's missing is a picture of what the regularity conditions are actually protecting us from. A good place to start is a case where they fail.
 
 ### When the conditions fail: Gaussian mixtures
 
-Consider a two-component mixture,
+The canonical example is a model statisticians use every day: the Gaussian mixture. Take two components,
 
 $$p(x)=\pi_1 N(x|\mu_1,\sigma_1^2)+\pi_2 N(x|\mu_2,\sigma_2^2),$$
 
-with $\pi_1 + \pi_2 = 1$ and both weights strictly between $0$ and $1$. Set $\mu_2 = x_n$. That data point's second-component term is
+where $\pi_1+\pi_2=1$, both weights are strictly between $0$ and $1$, and $N(x|\mu,\sigma^2)$ is the normal density.
+
+Now put the second component's mean exactly on one data point, $\mu_2 = x_n$. That point's second-component term is
 
 $$\pi_2 N(x_n|x_n,\sigma_2^2)=\frac{\pi_2}{\sqrt{2\pi\sigma_2^2}} \to \infty \quad\text{as } \sigma_2\to 0,$$
 
-while the first component fits the remaining points. The likelihood is unbounded, so the maximum doesn't exist [1]. This violates the well-separated maximum condition.
+while the first component is free to fit the remaining points. So the likelihood is unbounded, and there is no maximum to find [1]. The well-separated maximum condition fails.
 
-A single Gaussian doesn't have this problem. Set the mean to $x_n$ and shrink the variance, and the other points' contributions go to $0$ fast enough to drag the whole likelihood to $0$. In the mixture, the other component absorbs those points, and the degenerate component is unchecked.
+A single Gaussian fit to two or more points doesn't have this problem. If you put the mean on one data point and shrink the variance, that point's density blows up, but every other point's density goes to $0$ much faster, and the overall likelihood goes to $0$. The rest of the data keeps the spike in check. In the mixture, the other component absorbs the rest of the data, and nothing keeps the spike in check.
 
-Practitioners know this. Standard mixture-fitting code adds a small constant (like `1e-6`) to the covariance diagonal. That replaces the ill-posed problem with a nearby well-posed one. The regularity conditions fail for the original problem and are *enforced* by the modification.
+Practitioners know this. Standard mixture-fitting code adds a small constant (like `1e-6`) to the diagonal of each covariance matrix, which quietly replaces the ill-posed problem with a nearby well-posed one. The regularity conditions don't hold for the original problem; they are *enforced* by the fix.
 
 ### A finite-sample view
 
-Asymptotics is the real justification, but there is also a finite-sample question: for fixed $n$, how likely is a sample that makes the likelihood huge? Let $X_1, \dots, X_n \sim P_{\theta^\*}$ and define
+The mixture shows what failure looks like. To see what the regularity conditions are guarding against when they *do* hold, it helps to ask a concrete, finite-sample question: for a fixed sample, when can the likelihood be made huge, and how often does that happen? This doesn't replace the asymptotic theory, but it gives a picture of what that theory is ruling out.
 
-$$A_N = \left\\{\sup_{\theta \in\Theta} L_n(\theta) > N \right\\}.$$
+Fix $n$, let $X_1,\dots,X_n \sim P_{\theta^\*}$, and for a large number $N$ define
 
-For a well-behaved model we want $\mathbb{P}(A_N) \to 0$ as $N \to \infty$. For the Gaussian mixture, $\mathbb{P}(A_N) = 1$ for every $N$.
+$$A_N = \left\\{\sup_{\theta \in\Theta} L_n(\theta) > N \right\\},$$
 
-**Bounded densities.** If $f(x|\theta) < M$ for all $x, \theta$, then $L_n \le M^n$ and $A_N$ is empty for $N \ge M^n$. Gaussians are not bounded, but restricting $\sigma^2 > \varepsilon^2$ bounds the density by $1/\sqrt{2\pi\varepsilon^2}$. This is what the `1e-6` does.
+the event that the sample admits some parameter with likelihood above $N$. For a well-behaved model we'd want $\mathbb{P}(A_N) \to 0$ as $N \to \infty$: huge likelihoods should be rare. For the Gaussian mixture, $\mathbb{P}(A_N) = 1$ for every $N$.
 
-**Exponential.** Let $X_i \sim {\rm Exp}(\lambda^\*)$, so $f(x|\lambda)=\lambda e^{-\lambda x}$. With $S = \sum_i X_i$, the MLE is $\hat\lambda = n/S$ and
+**Bounded densities.** The easy case is when there is a constant $M$ with $f(x|\theta) \le M$ for all $x$ and $\theta$. Then $L_n(\theta) \le M^n$ for every sample, so $A_N$ is empty once $N \ge M^n$. Gaussians don't satisfy this, but restricting to $\sigma^2 \ge \varepsilon^2$ bounds the density by $1/\sqrt{2\pi\varepsilon^2}$. That is exactly what the `1e-6` does.
 
-$$\sup_\lambda L_n(\lambda) = \left(\frac{n}{eS}\right)^n.$$
+When the density is unbounded, the answer depends on the model. Two examples show the pattern.
 
-This exceeds $N$ exactly when $S < n/(e N^{1/n})$. Since $S \sim \mathrm{Gamma}(n, \lambda^\*)$, we have $\mathbb{P}(S < s) \le (\lambda^\* s)^n / n!$, so
+**Exponential.** Let $X_i \sim {\rm Exp}(\lambda^\*)$, with density $f(x|\lambda)=\lambda e^{-\lambda x}$. Writing $S = \sum_i X_i$, the MLE is $\hat\lambda = n/S$, and plugging it in gives
 
-$$\mathbb{P}(A_N) \le \frac{1}{N}\cdot\frac{(\lambda^\* n/e)^n}{n!}.$$
+$$\sup_{\lambda > 0} L_n(\lambda) = \left(\frac{n}{eS}\right)^n.$$
 
-**Gaussian.** Let $X_i \sim \mathcal{N}(\mu^\*, {\sigma^\*}^2)$ with $n \ge 2$. Evaluating at the MLE gives
+This is unbounded as $S \to 0$: if every observation is squeezed up against zero, the likelihood can be made as large as you like. But that is exactly the kind of sample the true distribution rarely produces. The likelihood exceeds $N$ exactly when $S < n/(e N^{1/n})$. Since $S \sim \mathrm{Gamma}(n, \lambda^\*)$, we have $\mathbb{P}(S < s) \le (\lambda^\* s)^n/n!$, and combining the two (using $n! \ge (n/e)^n$) gives
 
-$$\sup L_n = (2\pi e\,\hat\sigma^2)^{-n/2},$$
+$$\mathbb{P}(A_N) \le \frac{(\lambda^\*)^n}{N}.$$
 
-so $A_N$ requires $\hat\sigma^2 < (2\pi e)^{-1} N^{-2/n}$. Since $\hat\sigma^2 \ge R^2/(2n)$, where $R$ is the sample range, this forces $R < \sqrt{n/(\pi e)}\, N^{-1/n}$. Conditioning on $X_1$, each other point must land within $R$ of it, which has probability at most $2R/(\sqrt{2\pi}\sigma^\*)$. Hence
+Arbitrarily large likelihoods are possible, but a likelihood above $N$ happens with probability at most order $1/N$.
 
-$$\mathbb{P}(A_N) \le \left(\frac{c_n N^{-1/n}}{\sigma^\*}\right)^{n-1}, \qquad c_n = \frac{1}{\pi}\sqrt{\frac{2n}{e}},$$
+**Gaussian.** Let $X_i \sim \mathcal{N}(\mu^\*, {\sigma^\*}^2)$. The MLEs are the sample mean $\bar X$ and $\hat\sigma^2 = \frac1n\sum_i (X_i - \bar X)^2$, and
 
-which goes to $0$ as $N \to \infty$.
+$$\sup_{\mu,\sigma^2} L_n = \left(2\pi e\,\hat\sigma^2\right)^{-n/2}.$$
 
-In both cases, huge likelihoods need the sample to be squeezed into a tiny region, and the true distribution gives that region vanishing probability. In the mixture, nothing needs to be squeezed, so the likelihood is unbounded for every sample.
+Here the likelihood blows up when the sample is squeezed together *anywhere*, not near a particular point, because the mean can always be moved on top of the data for free. The amount of squeezing is measured by $\hat\sigma^2$, whose distribution is known exactly: $n\hat\sigma^2/{\sigma^\*}^2 \sim \chi^2_{n-1}$. The same kind of small-ball bound as in the exponential case gives
 
-### Final remarks
+$$\mathbb{P}(A_N) \le C_n \\, N^{-(n-1)/n}, \qquad C_n = \frac{1}{\Gamma\left(\frac{n+1}{2}\right)}\left(\frac{n}{4\pi e\\,{\sigma^\*}^2}\right)^{\frac{n-1}{2}}.$$
 
-These examples suggest $\mathbb{P}(A_N) \to 0$ whenever the classical regularity conditions hold. I suspect this is true but haven't tried to prove it.
+In the exponential, $\mathbb{P}(A_N)$ decays like $N^{-1}$ for every $n$, including $n = 1$. In the Gaussian it decays like $N^{-(n-1)/n}$. For $n \ge 2$ huge likelihoods are still rare, but for $n = 1$ the exponent is $0$ and there is no protection at all. That makes sense: with a single observation you can put the mean on it, shrink the variance, and send the likelihood to infinity for *every* sample.
 
-The point stands regardless. MLE is principled: consistency under regularity conditions is a real result. But "choose the parameters that make the data most likely" and the asymptotic theory are different justifications, and statistics education often presents the first as if it were the second. The regularity conditions are usually a footnote. They are the headline.
+#### The picture
+
+Putting the three examples together gives the picture I was looking for. In a well-behaved model, the only way to make the likelihood huge is for the sample to be squeezed into a tiny region, and the true distribution almost never produces such a sample. That is why MLE doesn't chase degenerate parameters in practice: the degenerate parameters are only attractive on degenerate data. The mixture breaks because it lets the likelihood blow up without any squeezing at all, so every sample is degenerate.
+
+This isn't the whole content of the regularity conditions. Identifiability, for instance, is a separate issue. But it is the part that answers the puzzle we started with, and it is something you can actually picture.
+
+### Some final remarks
+
+MLE is a principled method: consistency under regularity conditions is a real and non-trivial result. My complaint is with how it's explained. "Choose the parameters that make the data most likely" is easy to understand but doesn't hold up for continuous models. The regularity conditions hold up, but on their own they don't tell you what they are protecting against. The finite-sample view is my attempt to fill that gap: huge likelihoods require squeezed samples, and under a well-behaved model squeezed samples are rare.
+
+These examples suggest a more general result: that $\mathbb{P}(A_N) \to 0$ whenever the classical regularity conditions hold. I suspect this is true but haven't tried to prove it carefully.
+
+The intuition students remember is wrong, and the theory that’s right is easy to forget. The fix isn’t to drop either one. It’s to give the theory a picture worth remembering. We shouldn’t have to choose between an explanation students can follow and one that’s true.
 
 Thanks for reading!
 
