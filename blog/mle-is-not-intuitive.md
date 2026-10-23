@@ -102,6 +102,8 @@ The intuition students remember is wrong, and the theory that’s right is easy 
 
 Thanks for reading!
 
+<p style="font-style: italic;">Note: this post was updated on 2026-10-22 to sharpen its main argument and to correct the finite-sample bounds. The Gaussian bound in the original version was wrong, and both examples now use exact distributions.</p>
+
 ### References
 
 [1] Bishop, C. M. (2006). *Pattern recognition and machine learning*. Springer.
