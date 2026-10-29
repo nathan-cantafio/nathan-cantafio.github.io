@@ -2,26 +2,26 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://nathancantafio.com/</loc>
-    
   </url>
   <url>
     <loc>https://nathancantafio.com/all-posts.html</loc>
-    
   </url>
   <url>
     <loc>https://nathancantafio.com/notes.html</loc>
-    
   </url>
   <url>
     <loc>https://nathancantafio.com/cv/</loc>
-    
   </url>
   <url>
-    <loc>https://nathancantafio.com/blog/post.html?file=mle-is-not-intuitive.md</loc>
-    <lastmod>2025-12-13</lastmod>
+    <loc>https://nathancantafio.com/blog/on-experimental-design.html</loc>
+    <lastmod>2026-05-04</lastmod>
   </url>
   <url>
-    <loc>https://nathancantafio.com/blog/post.html?file=pokemon-team-opt.md</loc>
+    <loc>https://nathancantafio.com/blog/pokemon-team-opt.html</loc>
     <lastmod>2025-12-20</lastmod>
+  </url>
+  <url>
+    <loc>https://nathancantafio.com/blog/mle-is-not-intuitive.html</loc>
+    <lastmod>2025-12-13</lastmod>
   </url>
 </urlset>

@@ -1,0 +1,51 @@
+% Blog post template.
+% Copy this file to blog/posts/<slug>.tex. The file name becomes the URL
+% (/blog/<slug>.html). Commit it and the pre-commit hook builds the page and feed.
+% It still compiles with pdflatex, so you can preview it as a PDF too.
+%
+% Works: sections, lists, emphasis, amsmath environments, \newcommand macros,
+%   \label/\eqref for equations, footnotes, tables, \cite with \bibliography.
+% Doesn't: numbered \ref to sections or figures (it shows the label), TikZ (export figures to SVG or PNG) and unusual packages.
+% Images go in blog/assets/<slug>/ as PNG, SVG or GIF (not PDF). GIFs animate on
+% the site but pdflatex can't include them, so a post with GIFs won't compile to PDF.
+% Always give images a width with a number in front, e.g. width=0.75\linewidth or
+% width=1.0\linewidth. Pandoc ignores a bare width=\linewidth.
+
+\documentclass{article}
+\usepackage{amsmath,amssymb,graphicx,booktabs,hyperref}
+\graphicspath{{../}} % lets pdflatex find assets/ when compiling from blog/posts/
+
+\newcommand{\E}{\mathbb{E}}
+
+\title{Post Title}
+\date{2026-01-01} % must be YYYY-MM-DD
+
+\begin{document}
+
+\begin{abstract}
+One or two sentences. This becomes the description on the blog, in the feed and in notification emails.
+\end{abstract}
+
+\section{A section}
+
+Text with \emph{emphasis}, inline math $\E[X_i^*]$, and a numbered equation:
+\begin{equation}\label{eq:ols}
+  \hat\beta = (X^\top X)^{-1} X^\top y.
+\end{equation}
+Equation~\eqref{eq:ols} can be referred back to.\footnote{Footnotes work too.}
+
+\begin{align*}
+  \operatorname{Var}(\hat\beta) &= \sigma^2 (X^\top X)^{-1} \\
+                                &\succeq 0.
+\end{align*}
+
+\begin{itemize}
+  \item A list item.
+  \item Another one.
+\end{itemize}
+
+% \begin{center}
+%   \includegraphics[width=0.75\linewidth,alt={What the figure shows}]{assets/<slug>/figure.png}
+% \end{center}
+
+\end{document}
