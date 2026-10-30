@@ -507,3 +507,85 @@ a:hover {
   padding: 0.75em 0;
   margin: 0.25em 0 !important;
 }
+
+/* ===== Subscribe forms (Kit) ===== */
+.subscribe-form {
+  display: flex;
+  gap: 6px;
+  margin: 6px 0 0;
+}
+
+.subscribe-form input[type="email"] {
+  flex: 1;
+  min-width: 0;
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--brown-dark);
+  background: var(--cream-main);
+  border: 0.5px solid var(--border);
+  border-radius: 3px;
+  padding: 7px 9px;
+}
+
+.subscribe-form input[type="email"]::placeholder {
+  color: var(--brown-muted);
+}
+
+.subscribe-form input[type="email"]:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(198, 124, 62, 0.2);
+}
+
+.subscribe-form button {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  color: var(--cream);
+  background: var(--brown-dark);
+  border: none;
+  border-radius: 3px;
+  padding: 7px 14px;
+  cursor: pointer;
+}
+
+.subscribe-form button:hover {
+  background: var(--accent-dark);
+}
+
+/* Sidebar: the column is narrow, so stack the field above the button */
+.sidebar .subscribe-form {
+  flex-direction: column;
+}
+
+.sidebar .subscribe-form input[type="email"] {
+  font-size: 12px;
+}
+
+/* End of each blog post */
+.post-subscribe {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 0.5px solid var(--border);
+}
+
+.post-subscribe h3 {
+  margin-top: 0;
+  font-size: 20px;
+}
+
+.post-subscribe .subscribe-form {
+  max-width: 420px;
+}
+
+.main-content .post-subscribe .rss-note {
+  font-size: 13px;
+  color: var(--brown-text);
+  margin-top: 14px;
+}
+
+.post-subscribe .rss-note a {
+  color: var(--accent-dark);
+}
