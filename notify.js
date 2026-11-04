@@ -46,11 +46,14 @@ const description = get("description");
   const broadcast = {
     subject: `New post: ${unescape(title)}`,
     preview_text: unescape(description),
+    // Kept deliberately plain, like a personal email.
     content:
-      `<p>I've published a new post:</p>` +
-      `<h2><a href="${link}">${title}</a></h2>` +
+      `<p>Hi,</p>` +
+      `<p>I've just put up a new post, "${title}".</p>` +
       `<p>${description}</p>` +
-      `<p><a href="${link}">Read it on the blog →</a></p>`,
+      `<p>You can read it here:<br><a href="${link}">${link}</a></p>` +
+      `<p>As always, I'm happy to hear what you think. Just reply to this email.</p>` +
+      `<p>Nathan</p>`,
     description: `Blog post: ${unescape(title)}`, // internal note; only you see it
     public: false,
     send_at: send ? new Date(Date.now() + 5 * 60 * 1000).toISOString() : null,
