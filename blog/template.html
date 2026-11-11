@@ -8,6 +8,8 @@
   <meta name="description" content="$metadesc$" />
   <link rel="canonical" href="https://nathancantafio.com/blog/$slug$.html" />
   <link rel="alternate" type="application/rss+xml" title="Nathan Cantafio" href="/feed.xml" />
+  <!-- build:head -->
+  <!-- /build:head -->
   <link rel="stylesheet" href="/style.css" />
   <script>
     window.MathJax = {
@@ -19,34 +21,33 @@
     };
   </script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js" async></script>
-
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
-  <link rel="icon" type="image/svg+xml" href="/favicon/favicon.svg" />
-  <link rel="shortcut icon" href="/favicon/favicon.ico" />
-  <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
-  <meta name="apple-mobile-web-app-title" content="Nathan Cantafio" />
-  <link rel="manifest" href="/favicon/site.webmanifest" />
 </head>
 <body>
 
-  <div id="header"></div>
+  <div id="header">
+    <!-- build:header -->
+    <!-- /build:header -->
+  </div>
 
-  <div class="page-layout">
-
-    <div id="sidebar"></div>
+  <div class="page-layout no-sidebar">
 
     <div class="main-content">
       <a href="/all-posts.html" class="back-link">← Back to all posts</a>
-      <div id="post-meta">
-        <h2>$title$</h2>
-        <p><em>$date$</em></p>
-        $abstract$
-        <hr>
-      </div>
+      <header id="post-meta">
+        <h1 class="post-title">$title$</h1>
+        <p class="post-byline"><time datetime="$date$">$datelong$</time></p>
+        <div class="post-abstract">
+          $abstract$
+        </div>
+      </header>
       <article id="post-content">
 $body$
       </article>
+
+      <footer class="post-author">
+        <img src="/profile.jpeg" alt="" width="800" height="886" loading="lazy">
+        <p>Written by <a href="/">Nathan Cantafio</a>. <a href="/all-posts.html" class="more-link">More posts →</a></p>
+      </footer>
 
       <section class="post-subscribe" aria-labelledby="subscribe-heading">
         <h3 id="subscribe-heading">Get new posts by email</h3>
@@ -62,7 +63,5 @@ $body$
 
   </div>
 
-  <script src="/load-header.js" defer></script>
-  <script src="/load-sidebar.js" defer></script>
 </body>
 </html>

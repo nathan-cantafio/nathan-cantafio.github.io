@@ -6,23 +6,38 @@
     <title>Almost done — Nathan Cantafio</title>
     <!-- Kit sends new subscribers here (set in the form's settings in Kit). -->
     <meta name="robots" content="noindex">
+    <!-- build:head -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,600&amp;family=DM+Sans:wght@300;400;500&amp;family=STIX+Two+Text:ital,wght@0,400;0,600;1,400;1,600&amp;display=swap">
+    <link rel="icon" href="/favicon/favicon.ico?v=2" sizes="32x32">
+    <link rel="icon" type="image/svg+xml" href="/favicon/favicon.svg?v=2">
+    <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png?v=2" sizes="96x96">
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png?v=2">
+    <meta name="apple-mobile-web-app-title" content="Nathan Cantafio">
+    <link rel="manifest" href="/favicon/site.webmanifest">
+    <meta name="theme-color" content="#2C1810">
+    <!-- /build:head -->
     <link rel="stylesheet" href="/style.css">
-
-    <!-- Favicon -->
-   <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
-   <link rel="icon" type="image/svg+xml" href="/favicon/favicon.svg" />
-   <link rel="shortcut icon" href="/favicon/favicon.ico" />
-   <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
-   <meta name="apple-mobile-web-app-title" content="Nathan Cantafio" />
-   <link rel="manifest" href="/favicon/site.webmanifest" />
 </head>
 <body>
 
-    <div id="header"></div>
+    <div id="header">
+        <!-- build:header -->
+        <div class="header">
+          <div class="header-content">
+            <a href="/" class="home-link"><h1>Nathan Cantafio</h1></a>
+          </div>
+          <nav class="header-nav">
+            <a href="/" data-page="home">Home</a>
+            <a href="/all-posts.html" data-page="blog">Blog</a>
+            <a href="/notes.html" data-page="notes">Notes</a>
+          </nav>
+        </div>
+        <!-- /build:header -->
+    </div>
 
-    <div class="page-layout">
-
-        <div id="sidebar"></div>
+    <div class="page-layout no-sidebar">
 
         <div class="main-content">
 
@@ -38,7 +53,5 @@
 
     </div>
 
-    <script src="/load-header.js" defer></script>
-    <script src="/load-sidebar.js" defer></script>
 </body>
 </html>

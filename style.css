@@ -1,5 +1,6 @@
-/* ===== Fonts ===== */
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,600&family=DM+Sans:wght@300;400;500&family=STIX+Two+Text:ital,wght@0,400;0,600;1,400;1,600&display=swap');
+/* ===== Fonts =====
+   Loaded by <link> tags in each page's <head>, which build.js writes
+   (the build:head region). To change the fonts, edit FONTS_URL in build.js. */
 
 /* ===== Variables ===== */
 :root {
@@ -111,7 +112,18 @@ a:hover {
   background: var(--cream-main);
 }
 
-/* #sidebar is the flex child; .sidebar is the injected partial inside it */
+/* Pages without a sidebar (blog posts, 404): one centred reading column */
+.page-layout.no-sidebar {
+  justify-content: center;
+}
+
+.page-layout.no-sidebar .main-content {
+  max-width: 756px; /* a 660px column plus the side padding */
+  padding-top: 48px;
+  padding-bottom: 64px;
+}
+
+/* #sidebar is the flex child; .sidebar is the partial that build.js puts inside it */
 #sidebar {
   flex-shrink: 0;
   display: flex;
@@ -129,6 +141,7 @@ a:hover {
 
 .sidebar-profile-image {
   width: 100%;
+  height: auto;
   aspect-ratio: 1;
   object-fit: cover;
   border-radius: 3px;
@@ -209,7 +222,7 @@ a:hover {
 }
 
 .main-content p {
-  font-size: 14.5px;
+  font-size: 15px;
   font-weight: 300;
   line-height: 1.85;
   color: var(--brown-dark);
@@ -223,6 +236,11 @@ a:hover {
   font-weight: 600;
   font-size: 16px;
   color: var(--accent-dark);
+}
+
+/* The line under the name on the homepage stays at its original size */
+.main-content .page-eyebrow {
+  font-size: 14.5px;
 }
 
 .page-eyebrow {
@@ -281,20 +299,10 @@ a:hover {
   color: var(--brown-text);
 }
 
-#all-posts-list,
 #recent-posts-main {
   list-style: none;
   padding: 0;
   margin-top: 8px;
-}
-
-#all-posts-list li {
-  padding: 12px 0;
-  border-bottom: 0.5px solid var(--border-light);
-  display: grid;
-  grid-template-columns: 2fr 90px 3fr;
-  gap: 16px;
-  align-items: start;
 }
 
 #recent-posts-main li {
@@ -306,7 +314,6 @@ a:hover {
   gap: 16px;
 }
 
-#all-posts-list a,
 #recent-posts-main a {
   font-size: 14px;
   font-weight: 400;
@@ -314,7 +321,6 @@ a:hover {
   text-decoration: none;
 }
 
-#all-posts-list a:hover,
 #recent-posts-main a:hover {
   color: var(--accent-dark);
   text-decoration: underline;
@@ -327,11 +333,92 @@ a:hover {
   flex-shrink: 0;
 }
 
-.post-description {
-  font-size: 12.5px;
-  font-weight: 300;
+/* ===== Entry lists: All Posts and Notes =====
+   Each entry is stacked: a small label, the title, then the description. */
+.entry-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.entry {
+  padding: 22px 0 24px;
+  border-bottom: 0.5px solid var(--border-light);
+}
+
+.entry:first-child {
+  padding-top: 6px;
+}
+
+.entry-meta {
+  display: block;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 1.3px;
+  text-transform: uppercase;
+  color: var(--brown-muted);
+  margin-bottom: 5px;
+}
+
+.entry-title {
+  font-family: 'STIX Two Text', Georgia, serif;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: 0.1px;
+  color: var(--brown-dark);
+  text-decoration: none;
+}
+
+a.entry-title:hover {
+  color: var(--accent-dark);
+  text-decoration: none;
+}
+
+.main-content .entry-desc {
+  font-size: 14px;
+  line-height: 1.75;
   color: var(--brown-text);
-  margin-top: 3px;
+  margin: 7px 0 0;
+  max-width: 640px;
+}
+
+/* A numbered series inside an entry (the diffusion notes) */
+.entry-parts {
+  list-style: none;
+  counter-reset: part;
+  padding: 0;
+  margin: 14px 0 0;
+  max-width: 640px;
+}
+
+.entry-parts li {
+  counter-increment: part;
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding: 8px 0;
+  border-top: 0.5px solid var(--border-light);
+}
+
+.entry-parts li::before {
+  content: counter(part, decimal-leading-zero);
+  min-width: 16px;
+  font-variant-numeric: tabular-nums;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  color: var(--brown-muted);
+}
+
+.entry-parts a {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--brown-dark);
+}
+
+.entry-parts a:hover {
+  color: var(--accent-dark);
 }
 
 .back-link {
@@ -407,17 +494,69 @@ a:hover {
     padding: 24px 20px;
   }
 
-  .main-content {
+  .main-content,
+  .page-layout.no-sidebar .main-content {
     padding: 28px 20px;
   }
 
+  .post-title {
+    font-size: 28px;
+  }
+
+  /* Blog, Notes: the content comes first and the sidebar follows it */
+  .page-layout.sidebar-after #sidebar {
+    order: 2;
+  }
+
+  .page-layout.sidebar-after .main-content {
+    flex: none;
+    padding-bottom: 40px;
+  }
+
+  .page-layout.sidebar-after .sidebar {
+    border-bottom: none;
+    border-top: 0.5px solid var(--border);
+  }
+
+  .page-layout.sidebar-after .sidebar-profile-image {
+    width: 120px;
+  }
+
+  /* Header: the name on one row and the links on a second row beneath it.
+     The links row scrolls sideways if it ever outgrows the screen. */
   .header {
-    padding: 0 20px;
+    flex-direction: column;
+    padding: 0;
+    min-height: 0;
+  }
+
+  .header-content {
+    margin-right: 0;
+    padding: 11px 20px 9px;
+  }
+
+  .header h1 {
+    font-size: 22px;
+    line-height: 1.2;
+  }
+
+  .header-nav {
+    height: auto;
+    padding: 0 8px;
+    border-top: 0.5px solid rgba(245, 239, 230, 0.12);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .header-nav::-webkit-scrollbar {
+    display: none;
   }
 
   .header-nav a {
-    padding: 0 14px;
+    padding: 9px 12px;
     font-size: 11px;
+    border-left: none;
+    white-space: nowrap;
   }
 }
 
@@ -438,7 +577,7 @@ a:hover {
 #post-content {
   font-family: 'STIX Two Text', Georgia, serif;
   font-weight: 400;
-  font-size: 16px;
+  font-size: 17px;
   line-height: 1.7;
 }
 
@@ -450,11 +589,45 @@ a:hover {
   line-height: inherit;
 }
 
-#post-meta h2,
 #post-content h3,
 #post-content h4 {
   font-family: 'STIX Two Text', Georgia, serif;
   font-weight: 600;
+}
+
+/* Post header: title, date, then the abstract as a short introduction */
+#post-meta {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.post-title {
+  font-family: 'STIX Two Text', Georgia, serif;
+  font-size: 34px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.1px;
+  color: var(--brown-dark);
+  margin: 0.5rem 0 0.6rem;
+}
+
+#post-meta .post-byline {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 1.3px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 1.25rem;
+}
+
+#post-meta .post-abstract p {
+  font-size: 18px;
+  font-style: italic;
+  line-height: 1.6;
+  color: var(--brown-text);
+  margin: 0;
 }
 
 #post-content h4 { font-size: 18px; }
@@ -564,11 +737,52 @@ a:hover {
   font-size: 12px;
 }
 
-/* End of each blog post */
-.post-subscribe {
+/* End of each blog post: who wrote it, then the sign-up form */
+.post-author {
+  display: flex;
+  align-items: center;
+  gap: 14px;
   margin-top: 3rem;
   padding-top: 1.5rem;
   border-top: 0.5px solid var(--border);
+}
+
+.post-author img {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.main-content .post-author p {
+  font-size: 13px;
+  color: var(--brown-text);
+  margin: 0;
+}
+
+.post-author a {
+  color: var(--brown-dark);
+  font-weight: 400;
+}
+
+.post-author .more-link {
+  color: var(--accent);
+  margin-left: 6px;
+}
+
+.post-author a:hover {
+  color: var(--accent-dark);
+}
+
+.post-subscribe {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 0.5px solid var(--border);
+}
+
+.main-content .post-subscribe p {
+  font-size: 14.5px;
 }
 
 .post-subscribe h3 {

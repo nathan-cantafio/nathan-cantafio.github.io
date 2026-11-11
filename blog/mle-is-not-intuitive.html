@@ -8,6 +8,26 @@
   <meta name="description" content="The justification for using MLE estimates seems fairly intuitive, but this post makes an argument for why it isn’t." />
   <link rel="canonical" href="https://nathancantafio.com/blog/mle-is-not-intuitive.html" />
   <link rel="alternate" type="application/rss+xml" title="Nathan Cantafio" href="/feed.xml" />
+  <!-- build:head -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,600&amp;family=DM+Sans:wght@300;400;500&amp;family=STIX+Two+Text:ital,wght@0,400;0,600;1,400;1,600&amp;display=swap">
+  <link rel="icon" href="/favicon/favicon.ico?v=2" sizes="32x32">
+  <link rel="icon" type="image/svg+xml" href="/favicon/favicon.svg?v=2">
+  <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png?v=2" sizes="96x96">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png?v=2">
+  <meta name="apple-mobile-web-app-title" content="Nathan Cantafio">
+  <link rel="manifest" href="/favicon/site.webmanifest">
+  <meta name="theme-color" content="#2C1810">
+  <meta property="og:site_name" content="Nathan Cantafio">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="MLE is not intuitive">
+  <meta property="og:description" content="The justification for using MLE estimates seems fairly intuitive, but this post makes an argument for why it isn’t.">
+  <meta property="og:url" content="https://nathancantafio.com/blog/mle-is-not-intuitive.html">
+  <meta property="og:image" content="https://nathancantafio.com/favicon/og-image.png">
+  <meta property="og:image:alt" content="Nathan Cantafio">
+  <meta name="twitter:card" content="summary">
+  <!-- /build:head -->
   <link rel="stylesheet" href="/style.css" />
   <script>
     window.MathJax = {
@@ -19,31 +39,35 @@
     };
   </script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js" async></script>
-
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
-  <link rel="icon" type="image/svg+xml" href="/favicon/favicon.svg" />
-  <link rel="shortcut icon" href="/favicon/favicon.ico" />
-  <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
-  <meta name="apple-mobile-web-app-title" content="Nathan Cantafio" />
-  <link rel="manifest" href="/favicon/site.webmanifest" />
 </head>
 <body>
 
-  <div id="header"></div>
+  <div id="header">
+    <!-- build:header -->
+    <div class="header">
+      <div class="header-content">
+        <a href="/" class="home-link"><h1>Nathan Cantafio</h1></a>
+      </div>
+      <nav class="header-nav">
+        <a href="/" data-page="home">Home</a>
+        <a href="/all-posts.html" data-page="blog" class="active" aria-current="page">Blog</a>
+        <a href="/notes.html" data-page="notes">Notes</a>
+      </nav>
+    </div>
+    <!-- /build:header -->
+  </div>
 
-  <div class="page-layout">
-
-    <div id="sidebar"></div>
+  <div class="page-layout no-sidebar">
 
     <div class="main-content">
       <a href="/all-posts.html" class="back-link">← Back to all posts</a>
-      <div id="post-meta">
-        <h2>MLE is not intuitive</h2>
-        <p><em>2025-12-13</em></p>
-        <p>The justification for using MLE estimates seems fairly intuitive, but this post makes an argument for why it isn’t.</p>
-        <hr>
-      </div>
+      <header id="post-meta">
+        <h1 class="post-title">MLE is not intuitive</h1>
+        <p class="post-byline"><time datetime="2025-12-13">December 13, 2025</time></p>
+        <div class="post-abstract">
+          <p>The justification for using MLE estimates seems fairly intuitive, but this post makes an argument for why it isn’t.</p>
+        </div>
+      </header>
       <article id="post-content">
 <p>When I was first introduced to maximum likelihood estimation (MLE), it felt like a very natural idea. Later I learned the rigorous justification, and it felt like a completely different idea. I’ve come to think that students are usually given two explanations of why MLE works: one that is easy to understand but wrong, and one that is correct but opaque. This post is my attempt at something in between.</p>
 <p>Here is the setup. You have independent data <span class="math inline">\(x_1, \dots, x_n\)</span> that you believe came from a family of distributions with density <span class="math inline">\(f(x|\theta)\)</span>, for some unknown <span class="math inline">\(\theta\)</span>. For example, the data might be normal, with <span class="math inline">\(\theta = (\mu, \sigma^2)\)</span>. The <strong>likelihood function</strong> is the joint density of the data, viewed as a function of <span class="math inline">\(\theta\)</span>:</p>
@@ -102,6 +126,11 @@
 <p>[1] Bishop, C. M. (2006). <em>Pattern recognition and machine learning</em>. Springer.</p>
       </article>
 
+      <footer class="post-author">
+        <img src="/profile.jpeg" alt="" width="800" height="886" loading="lazy">
+        <p>Written by <a href="/">Nathan Cantafio</a>. <a href="/all-posts.html" class="more-link">More posts →</a></p>
+      </footer>
+
       <section class="post-subscribe" aria-labelledby="subscribe-heading">
         <h3 id="subscribe-heading">Get new posts by email</h3>
         <p>I'll send you an email when I publish something new. Unsubscribe any time.</p>
@@ -116,7 +145,5 @@
 
   </div>
 
-  <script src="/load-header.js" defer></script>
-  <script src="/load-sidebar.js" defer></script>
 </body>
 </html>
