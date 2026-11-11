@@ -20,7 +20,7 @@
 //    This script rewrites whatever is between the two markers, so don't edit
 //    there by hand: edit the source instead and run the build.
 //
-//      build:head            fonts, favicon and link-preview tags (set below)
+//      build:head            fonts (from fonts/), favicon and link-preview tags
 //      build:header          header.html, with the current page's link marked
 //      build:sidebar         sidebar.html
 //      build:posts           every post, newest first (all-posts.html)
@@ -43,8 +43,8 @@ const SITE_TITLE = "Nathan Cantafio";
 const SITE_DESCRIPTION =
   "Writing by Nathan Cantafio on probability, statistics, and mathematics.";
 const STATIC_PAGES = ["/", "/all-posts.html", "/notes.html", "/cv/"];
-const FONTS_URL =
-  "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,600&family=DM+Sans:wght@300;400;500&family=STIX+Two+Text:ital,wght@0,400;0,600;1,400;1,600&display=swap";
+// The fonts are hosted on the site itself: the files and fonts.css are in fonts/.
+const FONTS_CSS = "/fonts/fonts.css";
 // Image shown when a link to the site is shared (Slack, iMessage, LinkedIn...).
 const PREVIEW_IMAGE = "/favicon/og-image.png";
 // Browsers hold on to favicons for a long time. Bump this when the icon changes.
@@ -217,10 +217,15 @@ function removeStalePages(posts) {
 const REGIONS = {
   head(page) {
     const v = `?v=${FAVICON_VERSION}`;
+    // Preload the fonts the top of the page needs, so they arrive with the page
+    // instead of after it: body text and the header on every page, the big name
+    // on the homepage, the italic abstract on posts.
+    const preload = ["dm-sans-latin-normal", "stix-two-text-latin-normal"];
+    if (page.hasNameTitle) preload.push("cormorant-garamond-latin-normal");
+    if (page.isPost) preload.push("stix-two-text-latin-italic");
     const lines = [
-      `<link rel="preconnect" href="https://fonts.googleapis.com">`,
-      `<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>`,
-      `<link rel="stylesheet" href="${escapeXml(FONTS_URL)}">`,
+      ...preload.map((f) => `<link rel="preload" href="/fonts/${f}.woff2" as="font" type="font/woff2" crossorigin>`),
+      `<link rel="stylesheet" href="${FONTS_CSS}">`,
       `<link rel="icon" href="/favicon/favicon.ico${v}" sizes="32x32">`,
       `<link rel="icon" type="image/svg+xml" href="/favicon/favicon.svg${v}">`,
       `<link rel="icon" type="image/png" href="/favicon/favicon-96x96.png${v}" sizes="96x96">`,
@@ -328,6 +333,7 @@ function describePage(file, html) {
     description,
     noindex: /<meta\s+name="robots"\s+content="[^"]*noindex/.test(html),
     isPost: html.includes(MARKER),
+    hasNameTitle: html.includes('class="name-title"'),
   };
 }
 
@@ -351,7 +357,7 @@ function stampPages(posts) {
   for (const file of findPages()) {
     const html = fs.readFileSync(file, "utf8");
     const page = describePage(file, html);
-    // style.css no longer loads the fonts itself: build:head does.
+    // style.css doesn't load the fonts itself: build:head links fonts/fonts.css.
     if (html.includes('href="/style.css"') && !html.includes("<!-- build:head -->"))
       console.warn(`build.js: warning: ${page.file} uses style.css but has no build:head region, so it won't load the fonts`);
     if (!html.includes("<!-- build:")) continue;

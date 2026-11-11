@@ -1,6 +1,6 @@
 /* ===== Fonts =====
-   Loaded by <link> tags in each page's <head>, which build.js writes
-   (the build:head region). To change the fonts, edit FONTS_URL in build.js. */
+   Hosted on the site in fonts/ and declared in fonts/fonts.css, which
+   build.js links from each page's <head> (the build:head region). */
 
 /* ===== Variables ===== */
 :root {
