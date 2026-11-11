@@ -4,6 +4,25 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Movies & TV — Nathan Cantafio</title>
+  <!-- build:head -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,600&amp;family=DM+Sans:wght@300;400;500&amp;family=STIX+Two+Text:ital,wght@0,400;0,600;1,400;1,600&amp;display=swap">
+  <link rel="icon" href="/favicon/favicon.ico?v=2" sizes="32x32">
+  <link rel="icon" type="image/svg+xml" href="/favicon/favicon.svg?v=2">
+  <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png?v=2" sizes="96x96">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png?v=2">
+  <meta name="apple-mobile-web-app-title" content="Nathan Cantafio">
+  <link rel="manifest" href="/favicon/site.webmanifest">
+  <meta name="theme-color" content="#2C1810">
+  <meta property="og:site_name" content="Nathan Cantafio">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Movies &amp; TV">
+  <meta property="og:url" content="https://nathancantafio.com/projects/movies.html">
+  <meta property="og:image" content="https://nathancantafio.com/favicon/og-image.png">
+  <meta property="og:image:alt" content="Nathan Cantafio">
+  <meta name="twitter:card" content="summary">
+  <!-- /build:head -->
   <link rel="stylesheet" href="/style.css">
   <!-- Chart.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
@@ -241,12 +260,24 @@
     .clear-search:hover { color: var(--brown-dark); }
   </style>
 
-  <script src="/load-header.js" defer></script>
 </head>
 <body>
 
   <!-- ===== HEADER ===== -->
-  <div id="header"></div>
+  <div id="header">
+    <!-- build:header -->
+    <div class="header">
+      <div class="header-content">
+        <a href="/" class="home-link"><h1>Nathan Cantafio</h1></a>
+      </div>
+      <nav class="header-nav">
+        <a href="/" data-page="home">Home</a>
+        <a href="/all-posts.html" data-page="blog">Blog</a>
+        <a href="/notes.html" data-page="notes">Notes</a>
+      </nav>
+    </div>
+    <!-- /build:header -->
+  </div>
 
   <div class="page-layout">
 

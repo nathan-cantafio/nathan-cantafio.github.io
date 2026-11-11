@@ -1,7 +1,13 @@
 #!/bin/sh
-# Rebuilds the blog (post pages, feed.xml, sitemap.xml) whenever a commit
-# touches blog/posts/, the page template, the filters or build.js, and adds the results
-# to the same commit. If the build fails, the commit is stopped.
+# Rebuilds the site's generated parts whenever a commit touches something they
+# are made from, and adds the results to the same commit:
+#   - the blog (post pages, feed.xml, sitemap.xml), built from blog/posts/
+#   - the header, sidebar and post lists that build.js stamps into every page
+# If the build fails, the commit is stopped.
+#
+# Because the header and sidebar are part of every page, a rebuild adds every
+# page to the commit, including any other edits you have made to those pages.
+# Files in cv/ and notes/ are never touched.
 #
 # Turn it on once per clone of the repo:
 #   git config core.hooksPath .githooks
@@ -9,9 +15,10 @@
 # Git apps on macOS often run hooks without Homebrew on the PATH.
 export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
 
-if git diff --cached --name-only | grep -qE '^(blog/posts/|blog/template\.html$|blog/filters\.lua$|build\.js$)'; then
+if git diff --cached --name-only | grep -qE '^(blog/posts/|blog/filters\.lua$|build\.js$|([^/]+|blog/[^/]+|projects/[^/]+)\.html$)'; then
   command -v node >/dev/null 2>&1 || { echo "pre-commit: node not found"; exit 1; }
-  echo "pre-commit: rebuilding blog..."
+  echo "pre-commit: rebuilding site..."
   node build.js || { echo "pre-commit: build failed, commit stopped."; exit 1; }
   git add -A -- feed.xml sitemap.xml ':(glob)blog/*.html'
+  git add -u -- ':(glob)*.html' ':(glob)projects/*.html'
 fi

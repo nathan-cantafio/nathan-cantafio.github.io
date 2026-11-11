@@ -5,25 +5,100 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nathan Cantafio</title>
     <meta name="description" content="Personal website of Nathan Cantafio.">
+    <!-- build:head -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,600&amp;family=DM+Sans:wght@300;400;500&amp;family=STIX+Two+Text:ital,wght@0,400;0,600;1,400;1,600&amp;display=swap">
+    <link rel="icon" href="/favicon/favicon.ico?v=2" sizes="32x32">
+    <link rel="icon" type="image/svg+xml" href="/favicon/favicon.svg?v=2">
+    <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png?v=2" sizes="96x96">
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png?v=2">
+    <meta name="apple-mobile-web-app-title" content="Nathan Cantafio">
+    <link rel="manifest" href="/favicon/site.webmanifest">
+    <meta name="theme-color" content="#2C1810">
+    <meta property="og:site_name" content="Nathan Cantafio">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Nathan Cantafio">
+    <meta property="og:description" content="Personal website of Nathan Cantafio.">
+    <meta property="og:url" content="https://nathancantafio.com/">
+    <meta property="og:image" content="https://nathancantafio.com/favicon/og-image.png">
+    <meta property="og:image:alt" content="Nathan Cantafio">
+    <meta name="twitter:card" content="summary">
+    <!-- /build:head -->
     <link rel="stylesheet" href="/style.css">
     <link rel="alternate" type="application/rss+xml" title="Nathan Cantafio" href="/feed.xml">
     <link rel="canonical" href="https://nathancantafio.com/" />
-
-    <!-- Favicon -->
-   <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
-   <link rel="icon" type="image/svg+xml" href="/favicon/favicon.svg" />
-   <link rel="shortcut icon" href="/favicon/favicon.ico" />
-   <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
-   <meta name="apple-mobile-web-app-title" content="Nathan Cantafio" />
-   <link rel="manifest" href="/favicon/site.webmanifest" />
 </head>
 <body>
 
-    <div id="header"></div>
+    <div id="header">
+        <!-- build:header -->
+        <div class="header">
+          <div class="header-content">
+            <a href="/" class="home-link"><h1>Nathan Cantafio</h1></a>
+          </div>
+          <nav class="header-nav">
+            <a href="/" data-page="home" class="active" aria-current="page">Home</a>
+            <a href="/all-posts.html" data-page="blog">Blog</a>
+            <a href="/notes.html" data-page="notes">Notes</a>
+          </nav>
+        </div>
+        <!-- /build:header -->
+    </div>
 
     <div class="page-layout">
 
-        <div id="sidebar"></div>
+        <div id="sidebar">
+            <!-- build:sidebar -->
+            <div class="sidebar">
+              <img src="/profile.jpeg" alt="Photo of Nathan Cantafio" width="800" height="886" class="sidebar-profile-image">
+
+              <div class="sidebar-section">
+                <h3>Links</h3>
+                <a href="/cv/cv.pdf" target="_blank">CV (PDF)</a>
+                <a href="https://github.com/nathan-cantafio" target="_blank">GitHub</a>
+              </div>
+
+              <div class="sidebar-section">
+                <h3>Contact</h3>
+                <a href="mailto:nathan.cantafio@stat.ubc.ca">nathan.cantafio@stat.ubc.ca</a>
+              </div>
+
+              <div class="sidebar-section">
+                <h3>Notes</h3>
+                <ul>
+                  <li><a href="/notes/math507.pdf" target="_blank">Measure Theory &amp; Integration</a></li>
+                  <li><a href="/notes/math510.pdf" target="_blank">Functional Analysis</a></li>
+                  <li><a href="/notes/stat547c.pdf" target="_blank">Probability Theory</a></li>
+                </ul>
+                <a href="/notes.html" class="see-all-posts-link">See all notes →</a>
+              </div>
+
+              <div class="sidebar-section">
+                <h3>Blog</h3>
+                <ul id="recent-posts">
+                  <!-- build:recent-posts -->
+                  <li><a href="/blog/on-experimental-design.html">On Experimental Design</a></li>
+                  <li><a href="/blog/pokemon-team-opt.html">Pokémon Team Building</a></li>
+                  <li><a href="/blog/mle-is-not-intuitive.html">MLE is not intuitive</a></li>
+                  <!-- /build:recent-posts -->
+                </ul>
+                <a href="/all-posts.html" class="see-all-posts-link">See all posts →</a>
+              </div>
+
+              <div class="sidebar-section">
+                <h3>Subscribe</h3>
+                <p>Get new posts by email.</p>
+                <!-- Kit form: the form ID also appears in blog/template.html -->
+                <form class="subscribe-form" action="https://app.kit.com/forms/10118847/subscriptions" method="post">
+                  <input type="email" name="email_address" placeholder="you@example.com" aria-label="Email address" autocomplete="email" required>
+                  <button type="submit">Subscribe</button>
+                </form>
+                <a href="/feed.xml" class="see-all-posts-link">Or follow by RSS →</a>
+              </div>
+            </div>
+            <!-- /build:sidebar -->
+        </div>
         
         <div class="main-content">
 
@@ -46,9 +121,11 @@ Outside of stats, I can be found playing or watching soccer. I helped start a de
             <hr class="content-rule">
           
 
-			<!--
-            <p class="page-eyebrow">Recent Writing</p>
+            <!-- Recent writing (off for now). To turn it on, move the lines below out
+                 of this comment and put a pair of build markers named "recent-writing"
+                 inside the <ul>, the way sidebar.html does for "recent-posts".
 
+            <p class="page-eyebrow">Recent Writing</p>
             <ul id="recent-posts-main"></ul>
             -->
 
@@ -56,7 +133,5 @@ Outside of stats, I can be found playing or watching soccer. I helped start a de
 
     </div>
 
-    <script src="/load-header.js" defer></script>
-    <script src="/load-sidebar.js" defer></script>
 </body>
 </html>
